@@ -6,6 +6,12 @@ import SignIn from "./SignIn";
 import Register from "./Register";
 
 const Credentials = () => {
+  const [trigger, setTrigger] = useState(false);
+
+  const onTrigger = (e) => {
+    e.preventDefault();
+    setTrigger(!trigger);
+  }
   return (
     <div className="container">
       <div slot="header" className="header-container">
@@ -15,10 +21,10 @@ const Credentials = () => {
       </div>
       <div className="body-container">
         <div className="sign-in-or-register">
-          <a className="body-sign-in" href={<SignIn />}>SIGN IN</a>
-          <a className="body-register" href={<Register />}>REGISTER</a>
+          <a className="body-sign-in" href={<SignIn />} onClick={onTrigger}>SIGN IN</a>
+          <a className="body-register" href={<Register />} onClick={onTrigger}>REGISTER</a>
         </div>
-        <SignIn />
+        {trigger ? <Register /> : <SignIn />}
       </div>
       <div slot="footer" className="footer"></div>
     </div>

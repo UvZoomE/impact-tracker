@@ -1,68 +1,49 @@
 /* Sign in Form */
 
 .rux-form {
-  width: 30%;
   max-width: 430px;
-}
-
-/* Measure your success in the Space Force! */
-
-.body-quote {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #d4d8dd;
 }
 
 .sign-in-inputs {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+}
+
+.email-label {
+  color: #d4d8dd;
 }
 
 .email-input {
-  width: 50%;
   margin-bottom: 20px;
+  background-color: #101923;
+  color: #d4d8dd;
+  border-color: #2B659B;
+  height: 24px;
+}
+
+.password-label {
+  color: #d4d8dd;
 }
 
 .password-input {
-  width: 50%;
+  margin-bottom: 20px;
+  background-color: #101923;
+  color: #d4d8dd;
+  border-color: #2B659B;
+  height: 24px;
 }
 
 /* Remember me and forgot password */
-
-.sign-in-helper-functions {
-  display: flex;
-  flex-direction: column;
-  align-content: space-between;
-  margin-top: 10px;
-}
   
 .checkbox-control {
     color: white;
 }
   
 .forgot-password {
-    margin: 0;
     color: white;
     text-decoration: underline;
     text-decoration-color: #1976d2;
-}
-  
-.smaller-forgot-password {
-    margin: 0;
-    color: white;
-    text-decoration: underline;
-    text-decoration-color: #1976d2;
-    display: none;
-}
-  
-.sign-in-btn-container {
-    display: flex;
-    flex-direction: column;
-    align-items: end;
-    width: 100%;
-    margin-top: 20px;
 }
   
 .sign-in-btn {
@@ -70,41 +51,6 @@
     border-style: solid;
     border-color: #1b2d3e;
     height: 36px;
-    width: 25%;
+    width: 100%;
+    margin-top: 20px;
 }
-
-@media all and (max-width: 1000px) {
-  
-    .body-quote {
-      display: none;
-    }
-  
-    .sign-in-btn-container {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .sign-in-btn {
-      width: 100%;
-    }
-  
-    .forgot-password {
-      display: none;
-    }
-  
-    .smaller-forgot-password {
-      display: flex;
-      margin-top: 15px;
-    }
-  }
-  
-  @media all and (max-width: 278px) {
-  
-    .checkbox {
-      display: none;
-    }
-  
-    .sign-in-btn {
-      overflow: hidden;
-    }
-  }
