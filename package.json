@@ -11,6 +11,12 @@
   },
   "dependencies": {
     "@astrouxds/react": "^7.17.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.6.3",
+    "nodemailer": "^6.9.15",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-password-checklist": "^1.8.0"
