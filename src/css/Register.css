@@ -1,10 +1,8 @@
-/* Sign in Form */
-
 .rux-form {
   min-width: 430px;
 }
 
-.sign-in-inputs {
+.register-inputs {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -38,22 +36,18 @@
   width: 100%;
 }
 
-/* Remember me and forgot password */
-
-.sign-in-helpers {
-  display: flex;
-  justify-content: space-between;
+.confirm-password-label {
+  color: #d4d8dd;
+  margin-bottom: 10px;
 }
 
-.checkbox-control {
-  color: white;
-}
-
-.forgot-password {
-  color: white;
-  text-decoration: underline;
-  text-decoration-color: #1976d2;
-  margin: 0;
+.confirm-password-input {
+  margin-bottom: 20px;
+  background-color: #101923;
+  color: #d4d8dd;
+  border-color: #2b659b;
+  height: 24px;
+  width: 100%; 
 }
 
 .sign-in-btn-box {
