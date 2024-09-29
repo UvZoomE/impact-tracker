@@ -1,13 +1,19 @@
-import { useState } from "react";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Credentials from "./LandingPage/Credentials";
+import CompleteProfile from "./CompleteProfile";
+import Home from "./Home";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <Credentials />
-    </>
+    <Router>
+      <Routes>
+        {/* Define your routes here */}
+        <Route path="/" element={<Credentials />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/complete-profile" element={<CompleteProfile />} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -1,37 +1,64 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
-  username: {
+  firstName: {
     type: String,
-    required: true,
-    unique: true,
+    required: function () {
+      return this.profileCompleted;
+    },
   },
-  email: {
+  lastName: {
     type: String,
-    required: true,
-    unique: true,
+    required: function () {
+      return this.profileCompleted;
+    },
   },
-  password: {
+  rank: {
     type: String,
-    required: true,
+    required: function () {
+      return this.profileCompleted;
+    },
   },
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
-  verificationToken: {
+  DoDID: {
     type: String,
+    required: function () {
+      return this.profileCompleted;
+    },
   },
+  unit: {
+    type: String,
+    required: function () {
+      return this.profileCompleted;
+    },
+  },
+  role: {
+    type: String,
+    required: function () {
+      return this.profileCompleted;
+    },
+  },
+  reason: {
+    type: String,
+    required: function () {
+      return this.profileCompleted;
+    },
+  },
+  profileCompleted: { type: Boolean, default: false },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  isVerified: { type: Boolean, default: false },
+  verificationToken: { type: String },
 });
 
 // Hash password before saving user
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
-const User = mongoose.model('User', userSchema);
-module.exports = User;
+const User = mongoose.model("User", userSchema);
+
+export default User;

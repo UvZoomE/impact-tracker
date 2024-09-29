@@ -1,15 +1,26 @@
-import express, { json } from 'express';
-import connectDB from './config/db.js';  // Import the database connection
+import express from "express";
+import cors from "cors";
+import registerRouter from "./routes/register.js";
+import mongoose from "mongoose";
 
 const app = express();
 
-// Connect to MongoDB
-connectDB();
+// Middleware to parse JSON bodies
+app.use(express.json());
 
-app.use(json());
+app.use(cors());
 
-const PORT = process.env.PORT || 5000;
+app.use(registerRouter);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Connect to MongoDB and start server
+mongoose
+  .connect(`${process.env.MONGO_URI}/authDB`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    app.listen(process.env.PORT || 5000, () =>
+      console.log("Server running on port 5000"),
+    );
+  })
+  .catch((err) => console.log(err));

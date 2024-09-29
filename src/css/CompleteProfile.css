@@ -1,0 +1,175 @@
+body {
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
+}
+
+/* The Container of the entire sign in page */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header of the sign in page */
+.header-container {
+  background-color: #172635;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.body-container {
+  background-color: #1b2d3e;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer {
+  height: 64px;
+  background-color: #172635;
+}
+
+.rux-form {
+  min-width: 430px;
+}
+
+.finish-text {
+  display: flex;
+  justify-content: center;
+  color: white;
+  margin-bottom: 0;
+}
+
+.complete-profile-inputs {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.first-name-label {
+  color: #d4d8dd;
+  margin-bottom: 10px;
+}
+
+.first-name-input {
+  margin-bottom: 20px;
+  background-color: #101923;
+  color: #d4d8dd;
+  border-color: #2b659b;
+  height: 24px;
+  width: 100%;
+}
+
+.last-name-label {
+  color: #d4d8dd;
+  margin-bottom: 10px;
+}
+
+.last-name-input {
+  margin-bottom: 20px;
+  background-color: #101923;
+  color: #d4d8dd;
+  border-color: #2b659b;
+  height: 24px;
+  width: 100%;
+}
+
+.choices-label {
+  color: #d4d8dd;
+  margin-bottom: 10px;
+}
+
+.choices-select {
+  margin-bottom: 20px;
+  background-color: #101923;
+  color: #d4d8dd;
+  border-color: #2b659b;
+  height: 24px;
+  width: 100%;
+}
+
+.dod-id-label {
+  color: #d4d8dd;
+  margin-bottom: 10px;
+}
+
+.dod-id-input {
+  margin-bottom: 20px;
+  background-color: #101923;
+  color: #d4d8dd;
+  border-color: #2b659b;
+  height: 24px;
+  width: 100%;
+}
+
+.unit-label {
+  color: #d4d8dd;
+  margin-bottom: 10px;
+}
+
+.unit-input {
+  margin-bottom: 20px;
+  background-color: #101923;
+  color: #d4d8dd;
+  border-color: #2b659b;
+  height: 24px;
+  width: 100%;
+}
+
+.role-choice {
+  color: #d4d8dd;
+  margin-bottom: 10px;
+}
+
+.role-select {
+  margin-bottom: 20px;
+  background-color: #101923;
+  color: #d4d8dd;
+  border-color: #2b659b;
+  height: 24px;
+  width: 100%;
+}
+
+.reason-label {
+  color: #d4d8dd;
+  margin-bottom: 10px;
+}
+
+.reason-text-area {
+  margin-bottom: 20px;
+  background-color: #101923;
+  color: #d4d8dd;
+  border-color: #2b659b;
+  height: 24px;
+  width: 100%;
+}
+
+.complete-profile-btn-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.complete-profile-btn {
+  background-color: #4dacff;
+  border-style: solid;
+  border-color: #1b2d3e;
+  height: 36px;
+  margin-top: 20px;
+  width: 50%;
+}
