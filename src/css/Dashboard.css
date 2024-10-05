@@ -1,0 +1,96 @@
+.cards-container {
+  display: flex;
+  flex-direction: row; /* Default, but you can specify it explicitly */
+  gap: 40px;
+  height: 100%;
+  flex-wrap: wrap;
+}
+
+.war-button {
+  background-color: #4dacff;
+  color: #080c11;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+  display: inline-block;
+  width: 200px;
+}
+
+.war-button span {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.war-button .plus-icon {
+  font-size: 24px;
+  margin-top: 5px;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #101923;
+  border: 1px solid #51555b;
+  box-shadow:
+    0px 4px 6px rgba(0, 0, 0, 0.1),
+    0px 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card-header,
+.card-body,
+.card-footer {
+  padding: 10px;
+}
+
+.card-header {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.card-header,
+.card-footer {
+  flex-shrink: 0;
+}
+
+.card-header h4 {
+  margin: 0;
+  color: white;
+}
+
+.card-body {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+}
+
+.card-body h1 {
+  margin: 0;
+  color: white;
+}
+
+.card-footer {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.card-footer h5 {
+  margin: 0;
+  color: white;
+}
+
+.rating {
+  color: #56f000;
+}
+
+.icons {
+  color: #56f000;
+}
