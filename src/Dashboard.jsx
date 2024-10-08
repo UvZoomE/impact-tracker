@@ -1,20 +1,150 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
-  RuxCard,
-  RuxContainer,
   RuxIcon,
-  RuxTab,
-  RuxTabs,
+  RuxClassificationMarking,
 } from "@astrouxds/react";
 import "./css/Dashboard.css";
+import axios from "axios";
 
 function Dashboard() {
+  const [dialog, setDialog] = useState(false);
+  const [classification, setClassification] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [impact, setImpact] = useState("");
+  const [poc, setPOC] = useState("");
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      const token = localStorage.getItem("authToken");
+      // Make a GET request with Axios
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/user`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Sending token as a Bearer token
+          },
+        }
+      );
+      setPOC(response.data.email);
+    };
+    getUserInfo();
+  }, []);
+
+  const handleCreateWAR = async (e) => {
+    e.preventDefault();
+    setDialog(true);
+  };
+
+  const closeDialog = async (e) => {
+    e.preventDefault();
+    setDialog(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/wars`,
+        {
+          classification,
+          title,
+          description,
+          impact,
+          poc,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Sending token as a Bearer token
+          },
+        }
+      );
+      setDialog(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="cards-container">
-      <button class="war-button">
+      <button class="war-button" onClick={handleCreateWAR}>
         <span>Create a WAR</span>
         <span class="plus-icon">+</span>
       </button>
+
+      {/* Dialog */}
+      {dialog && (
+        <div className="dialog-overlay">
+          <div className="dialog">
+            <div slot="header" className="dialog-header">
+              <h3>Create a WAR</h3>
+              <RuxIcon icon="edit" size="small" className="create-war-icon" />
+            </div>
+            {classification ? (
+              <RuxClassificationMarking
+                classification={classification}
+              ></RuxClassificationMarking>
+            ) : (
+              ""
+            )}
+            <div slot="body">
+              <form onSubmit={handleSubmit} className="create-war-form">
+                <label htmlFor="classification">Classification:</label>
+                <select
+                  value={classification}
+                  onChange={(e) => setClassification(e.target.value)}
+                  required
+                  id="classification"
+                >
+                  <option value="">Select Classification</option>
+                  <option value="unclassified">Unclassified</option>
+                  <option value="cui">Controlled (CUI)</option>
+                  <option value="confidential">Confidential</option>
+                  <option value="secret">Secret</option>
+                  <option value="top-secret">Top Secret</option>
+                  <option value="top-secret-sci">Top Secret//SCI</option>
+                </select>
+
+                <label htmlFor="title">Title:</label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                  placeholder="Enter title"
+                  id="title"
+                />
+
+                <label htmlFor="description">Description:</label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  required
+                  placeholder="Enter detailed description"
+                  id="description"
+                />
+
+                <label htmlFor="impact">Impact of WAR:</label>
+                <textarea
+                  value={impact}
+                  onChange={(e) => setImpact(e.target.value)}
+                  required
+                  placeholder="Describe the impact"
+                  id="impact"
+                />
+
+                <label className="poc-label">POC (Point of Contact):</label>
+                <p className="poc-text">{poc}</p>
+
+                <button type="submit">Submit WAR</button>
+              </form>
+            </div>
+            <button onClick={closeDialog}>Cancel</button>
+          </div>
+        </div>
+      )}
+
       <div className="card-container">
         <div slot="header" className="card-header">
           <h4>WARs Submitted</h4>

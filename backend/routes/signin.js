@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import express from "express";
 import nodemailer from "nodemailer";
-import jwt from "jsonwebtoken";
+import generateToken from "../helperFunctions/generateToken.js";
 
 dotenv.config();
 
@@ -18,15 +18,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.PASSWORD, // replace with your email password (or use environment variables)
   },
 });
-
-const generateToken = (email) => {
-  const secretKey = process.env.SECRET_KEY; // Use a strong secret key
-  const token = jwt.sign(
-    { email: email }, // Payload (data you want to store in the token)
-    secretKey,
-  );
-  return token;
-};
 
 const resendVerificationEmail = async (verificationLink, email) => {
   const mailOptions = {
@@ -85,6 +76,8 @@ authRouter.post("/login", async (req, res) => {
 
     // Generate JWT or other authentication token if needed
     const token = generateToken(user.email);
+    user.verificationToken = token;
+    await user.save();
 
     // Respond with success and redirect to home
     res.status(200).json({ token });

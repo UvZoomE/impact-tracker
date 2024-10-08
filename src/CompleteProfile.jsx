@@ -17,39 +17,72 @@ const CompleteProfile = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [userId, setUserId] = useState("");
+  const [globalToken, setGlobalToken] = useState("");
 
   useEffect(() => {
     // Function to get the token from the URL
-    const getTokenFromURL = () => {
+    const getTokenFromURL = async () => {
       const params = new URLSearchParams(location.search); // Get query parameters from URL
       const token = params.get("token"); // Extract the 'token' parameter
-      return token;
+
+      if (!token) return null; // If no token in URL, return null
+
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/user`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Sending token as a Bearer token
+            },
+          }
+        );
+        // Check if the email exists and is valid
+        if (response.data && response.data.includes("@")) {
+          return token;
+        } else {
+          return null; // If the email is invalid, return null
+        }
+      } catch (error) {
+        // Handle error if the request fails
+        console.log(error);
+        return null;
+      }
     };
 
-    const token = getTokenFromURL(); // Call the function to get the token
-
-    // If no token, redirect to login or another page
-    if (!token) {
-      navigate("/"); // Redirect to login if no token
-      return;
-    }
-
-    const checkServer = async () => {
-      // Make a GET request with Axios
-      const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/complete-profile`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Sending token as a Bearer token
-          },
-        },
-      );
-
-      setUserId(response.data.userId);
+    // Function to check the server
+    const checkServer = async (token) => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/complete-profile`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Sending token as a Bearer token
+            },
+          }
+        );
+        if (response.data.error) {
+          navigate("/"); // If there's an error in the response, navigate to "/"
+          return;
+        }
+        setUserId(response.data.userId); // Set user ID if successful
+      } catch (error) {
+        // If the server check fails, navigate to "/"
+        navigate("/");
+      }
     };
 
-    checkServer();
-  }, []);
+    // Call the async functions inside an IIFE to handle async/await properly
+    (async () => {
+      const token = await getTokenFromURL(); // Await the token
+      if (token) {
+        setGlobalToken(token); // Set global token if it exists
+        checkServer(token); // Call checkServer with the token
+      } else {
+        alert("Sign in again to get a new token sent to your email");
+        navigate("/"); // If no token or invalid, navigate to "/"
+      }
+    })();
+  }, [location.search, navigate]); // Add 'location.search' and 'navigate' to dependency array
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -73,7 +106,13 @@ const CompleteProfile = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/complete-profile`,
         { userId, userObj },
+        {
+          headers: {
+            Authorization: `Bearer ${globalToken}`,
+          },
+        }
       );
+      localStorage.setItem("authToken", response.data.user.verificationToken);
       setSuccess("Profile complete! Enjoy!");
       setError("");
       if (response.data.user.profileCompleted) navigate("/home");

@@ -2,7 +2,8 @@ import express from "express";
 import User from "../models/User.js";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-import jwt from "jsonwebtoken";
+import verifyToken from "../middleware/verifyToken.js";
+import generateToken from "../helperFunctions/generateToken.js";
 
 dotenv.config();
 
@@ -10,21 +11,13 @@ const registerRouter = express.Router();
 
 // Nodemailer setup for sending emails
 const transporter = nodemailer.createTransport({
-  service: "outlook", // Use your preferred email service provider
+  host: "sandbox.smtp.mailtrap.io",
+  port: 2525,
   auth: {
-    user: process.env.EMAIL, // replace with your email
+    user: process.env.USERNAME, // replace with your email
     pass: process.env.PASSWORD, // replace with your email password (or use environment variables)
   },
 });
-
-const generateToken = (email) => {
-  const secretKey = process.env.SECRET_KEY; // Use a strong secret key
-  const token = jwt.sign(
-    { email: email }, // Payload (data you want to store in the token)
-    secretKey,
-  );
-  return token;
-};
 
 // Register route
 registerRouter.post("/register", async (req, res) => {
@@ -49,8 +42,8 @@ registerRouter.post("/register", async (req, res) => {
     const verificationLink = `http://localhost:5173/complete-profile?token=${verificationToken}`;
 
     const mailOptions = {
-      from: process.env.EMAIL,
-      to: user.email,
+      from: "test@example.com",
+      to: email,
       subject: "Account Verification",
       text: `Click this link to verify your account for the Impact Tracker application: ${verificationLink}`,
     };
@@ -70,24 +63,9 @@ registerRouter.post("/register", async (req, res) => {
 });
 
 // Get user data for pre-filling the complete profile form
-registerRouter.get("/complete-profile", async (req, res) => {
-  const authHeader = req.headers["authorization"]; // Get the Authorization header
-
-  if (!authHeader) {
-    return res.status(401).json({ message: "Authorization header missing" });
-  }
-
-  // The header format should be 'Bearer <token>'
-  const token = authHeader.split(" ")[1]; // Split the header and grab the token part
-
-  if (!token) {
-    return res.status(400).json({ error: "Token is required" });
-  }
-
+registerRouter.get("/complete-profile", verifyToken, async (req, res) => {
   try {
-    // Verify the token
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    const user = await User.findOne({ email: decoded.email });
+    const user = await User.findOne({ email: req.email });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -111,8 +89,7 @@ registerRouter.get("/complete-profile", async (req, res) => {
   }
 });
 
-registerRouter.post("/complete-profile", async (req, res) => {
-  console.log(req.body);
+registerRouter.post("/complete-profile", verifyToken, async (req, res) => {
   const { userId, userObj } = req.body;
 
   if (!userId) {
@@ -134,7 +111,7 @@ registerRouter.post("/complete-profile", async (req, res) => {
     user.unit = userObj.unit;
     user.role = userObj.role;
     user.reason = userObj.reason;
-    user.verificationToken = null;
+    user.verificationToken = generateToken(user.email);
 
     user.profileCompleted = true;
 

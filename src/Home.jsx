@@ -3,12 +3,9 @@ import React, { useEffect, useState } from "react";
 import {
   RuxClock,
   RuxMonitoringIcon,
-  RuxCard,
   RuxContainer,
   RuxTab,
   RuxTabs,
-  RuxTabPanel,
-  RuxTabPanels,
 } from "@astrouxds/react";
 import "@astrouxds/astro-web-components/dist/components/rux-tab";
 import "@astrouxds/astro-web-components/dist/components/rux-tabs";
@@ -65,7 +62,7 @@ const Home = () => {
           ""
         )}
       </RuxContainer>
-      <div className="body-container"></div>
+      <div className="body-container"> </div>
       <div slot="footer" className="footer"></div>
     </div>
   );
