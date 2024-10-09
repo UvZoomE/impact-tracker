@@ -13,6 +13,7 @@ function Dashboard() {
   const [description, setDescription] = useState("");
   const [impact, setImpact] = useState("");
   const [poc, setPOC] = useState("");
+  const [warCount, setWARCount] = useState(0);
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -27,6 +28,15 @@ function Dashboard() {
         }
       );
       setPOC(response.data.email);
+      const response2 = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/wars`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Sending token as a Bearer token
+          },
+        }
+      );
+      setWARCount(response2.data.warCount);
     };
     getUserInfo();
   }, []);
@@ -151,7 +161,7 @@ function Dashboard() {
           <RuxIcon icon="description" size="small" />
         </div>
         <div className="card-body">
-          <h1>0</h1>
+          <h1>{warCount}</h1>
         </div>
         <div slot="footer" className="card-footer">
           <h5>

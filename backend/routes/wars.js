@@ -35,4 +35,20 @@ warRouter.post("/wars", verifyToken, async (req, res) => {
   }
 });
 
+// GET route to fetch all WARs associated with the current user's email
+warRouter.get("/wars", verifyToken, async (req, res) => {
+  const email = req.email; // Assuming email is stored in the token
+
+  try {
+    // Count WAR documents where 'poc' matches the current user's email
+    const warCount = await WAR.countDocuments({ poc: email });
+
+    // Send a success response with the fetched WARs
+    res.status(200).json({ warCount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 export default warRouter;
