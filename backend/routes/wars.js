@@ -22,7 +22,7 @@ warRouter.post("/wars", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const name = user.firstName + " " + user.lastName;
+    const name = user[0].firstName + " " + user[0].lastName;
 
     // Create a new WAR document
     const newWar = new WAR({

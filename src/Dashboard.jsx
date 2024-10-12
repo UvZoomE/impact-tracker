@@ -39,7 +39,7 @@ function Dashboard() {
       setWARCount(response2.data.warCount);
     };
     getUserInfo();
-  }, []);
+  }, [dialog]);
 
   const handleCreateWAR = async (e) => {
     e.preventDefault();
