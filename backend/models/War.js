@@ -5,30 +5,30 @@ const Schema = mongoose.Schema;
 const WarSchema = new Schema({
   classification: {
     type: String,
-    required: true
+    required: true,
   },
   title: {
     type: String,
-    required: true
+    required: true,
   },
   description: {
     type: String,
-    required: true
+    required: true,
   },
   impact: {
     type: String,
-    required: true
+    required: true,
   },
   poc: {
     type: String,
-    required: true
+    required: true,
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-const WAR = mongoose.model('War', WarSchema);
+const WAR = mongoose.model("War", WarSchema);
 
 export default WAR;

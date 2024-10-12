@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  RuxIcon,
-  RuxClassificationMarking,
-} from "@astrouxds/react";
+import { RuxIcon, RuxClassificationMarking } from "@astrouxds/react";
 import "./css/Dashboard.css";
 import axios from "axios";
 
@@ -25,16 +22,19 @@ function Dashboard() {
           headers: {
             Authorization: `Bearer ${token}`, // Sending token as a Bearer token
           },
-        }
+        },
       );
-      setPOC(response.data.email);
+      setPOC(response.data);
       const response2 = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/wars`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Sending token as a Bearer token
           },
-        }
+          params: {
+            need: "warCount",
+          },
+        },
       );
       setWARCount(response2.data.warCount);
     };
@@ -68,7 +68,7 @@ function Dashboard() {
           headers: {
             Authorization: `Bearer ${token}`, // Sending token as a Bearer token
           },
-        }
+        },
       );
       setDialog(false);
     } catch (err) {

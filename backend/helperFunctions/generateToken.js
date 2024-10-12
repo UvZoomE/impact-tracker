@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -8,7 +8,7 @@ const generateToken = (email) => {
   const token = jwt.sign(
     { email: email }, // Payload (data you want to store in the token)
     secretKey,
-    { expiresIn: '24h'},
+    { expiresIn: "24h" },
   );
   return token;
 };

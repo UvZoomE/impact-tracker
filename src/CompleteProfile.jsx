@@ -34,7 +34,7 @@ const CompleteProfile = () => {
             headers: {
               Authorization: `Bearer ${token}`, // Sending token as a Bearer token
             },
-          }
+          },
         );
         // Check if the email exists and is valid
         if (response.data && response.data.includes("@")) {
@@ -58,7 +58,7 @@ const CompleteProfile = () => {
             headers: {
               Authorization: `Bearer ${token}`, // Sending token as a Bearer token
             },
-          }
+          },
         );
         if (response.data.error) {
           navigate("/"); // If there's an error in the response, navigate to "/"
@@ -110,7 +110,7 @@ const CompleteProfile = () => {
           headers: {
             Authorization: `Bearer ${globalToken}`,
           },
-        }
+        },
       );
       localStorage.setItem("authToken", response.data.user.verificationToken);
       setSuccess("Profile complete! Enjoy!");

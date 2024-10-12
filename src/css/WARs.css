@@ -1,0 +1,118 @@
+.rate-war-tabs {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.rate-war-tab::part(container) {
+  background-color: #101923;
+  border: 1px solid #2b659b;
+}
+
+.rate-war-tab[selected]::part(container) {
+  color: white;
+  background-color: #1c3f5e;
+  border: 1px solid #2b659b;
+}
+
+.rate-wars-background {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  height: 400px;
+}
+
+.war-card-first-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  color: white;
+  position: relative;
+}
+
+.avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the name under the Avatar */
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.name {
+  margin-top: 5px; /* Add space between Avatar and name */
+  font-size: 14px; /* Adjust the font size for the name */
+  text-align: center; /* Ensure the name is centered under the Avatar */
+  margin-bottom: 0;
+}
+
+.war-card-first-row h2 {
+  margin: 0;
+  margin-bottom: 15px;
+}
+
+.war-card-first-row h3 {
+  margin: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.war-card-first-row span {
+  color: #4dacff;
+}
+
+.card-title-with-line hr {
+  border: 1px solid #4dacff;
+}
+
+.attachment {
+  color: #56f000;
+}
+
+.attachment::part(icon) {
+  color: #56f000;
+}
+
+.war-card-second-row {
+  display: flex;
+  justify-content: center;
+  height: 100%; /* Ensure the container has a height for equal spacing */
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-description {
+  color: white;
+  border: 1px solid #4dacff;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.war-card-second-row p {
+  color: #4dacff;
+}
+
+.card-impact {
+  color: white;
+  border: 1px solid #4dacff;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.card-poc {
+  color: white;
+  border: 1px solid #4dacff;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.war-card-button {
+  margin-left: auto;
+  margin-right: auto;
+}
