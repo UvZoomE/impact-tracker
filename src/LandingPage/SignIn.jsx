@@ -70,10 +70,6 @@ const SignIn = () => {
         />
       </div>
       <div className="sign-in-helpers">
-        <label className="checkbox-control">
-          <input type="checkbox" name="rememberMe" className="remember-me" />
-          Remember me
-        </label>
         <p className="forgot-password">Forgot Password?</p>
       </div>
       <div className="sign-in-btn-box">

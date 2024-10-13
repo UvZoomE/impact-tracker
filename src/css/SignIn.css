@@ -54,6 +54,7 @@
   text-decoration: underline;
   text-decoration-color: #1976d2;
   margin: 0;
+  margin-left: auto;
 }
 
 .sign-in-btn-box {
