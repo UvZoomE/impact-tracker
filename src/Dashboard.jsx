@@ -14,29 +14,45 @@ function Dashboard() {
 
   useEffect(() => {
     const getUserInfo = async () => {
-      const token = localStorage.getItem("authToken");
-      // Make a GET request with Axios
-      const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/user`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Sending token as a Bearer token
-          },
-        },
-      );
-      setPOC(response.data);
-      const response2 = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/wars`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Sending token as a Bearer token
-          },
-          params: {
-            need: "warCount",
-          },
-        },
-      );
-      setWARCount(response2.data.warCount);
+      try {
+        const headers = {};
+        if (import.meta.env.MODE !== 'development') {
+          const token = localStorage.getItem("token");
+          if (!token) {
+            console.error("No token found");
+            // Redirect to login page or handle missing token
+            return;
+          }
+          headers.Authorization = `Bearer ${token}`;
+        }
+
+        // Log the VITE_BACKEND_URL to check its value
+        console.log("VITE_BACKEND_URL:", import.meta.env.VITE_BACKEND_URL);
+
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/user`,
+          { headers }
+        );
+        setPOC(response.data.email);
+
+        const response2 = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/wars`,
+          {
+            headers,
+            params: {
+              need: "warCount",
+            },
+          }
+        );
+        setWARCount(response2.data.warCount);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        if (error.response) {
+          console.error("Response data:", error.response.data);
+          console.error("Response status:", error.response.status);
+        }
+        // Handle errors appropriately
+      }
     };
     getUserInfo();
   }, [dialog]);
@@ -66,11 +82,25 @@ function Dashboard() {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Sending token as a Bearer token
+            Authorization: `Bearer ${token}`,
           },
         },
       );
+      
+      // Update the player's warsSubmitted count
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/player/submit-war`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      
       setDialog(false);
+      // Refresh the dashboard data
+      getUserInfo();
     } catch (err) {
       console.log(err);
     }
@@ -78,9 +108,9 @@ function Dashboard() {
 
   return (
     <div className="cards-container">
-      <button class="war-button" onClick={handleCreateWAR}>
+      <button className="war-button" onClick={handleCreateWAR}>
         <span>Create a WAR</span>
-        <span class="plus-icon">+</span>
+        <span className="plus-icon">+</span>
       </button>
 
       {/* Dialog */}

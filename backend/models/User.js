@@ -1,64 +1,16 @@
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
 
-const userSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: function () {
-      return this.profileCompleted;
-    },
-  },
-  lastName: {
-    type: String,
-    required: function () {
-      return this.profileCompleted;
-    },
-  },
-  rank: {
-    type: String,
-    required: function () {
-      return this.profileCompleted;
-    },
-  },
-  DoDID: {
-    type: String,
-    required: function () {
-      return this.profileCompleted;
-    },
-  },
-  unit: {
-    type: String,
-    required: function () {
-      return this.profileCompleted;
-    },
-  },
-  role: {
-    type: String,
-    required: function () {
-      return this.profileCompleted;
-    },
-  },
-  reason: {
-    type: String,
-    required: function () {
-      return this.profileCompleted;
-    },
-  },
-  profileCompleted: { type: Boolean, default: false },
+const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   isVerified: { type: Boolean, default: false },
-  verificationToken: { type: String },
+  profileCompleted: { type: Boolean, default: false },
+  verificationToken: String,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
+  // Add any other fields you need for your user model
 });
 
-// Hash password before saving user
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
-
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("User", UserSchema);
 
 export default User;
