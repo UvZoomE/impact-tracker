@@ -1,3 +1,67 @@
 .rux-tabs-family {
   background-color: #172635;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #1b2d3e;
+}
+
+.first-header-item {
+  color: white;
+}
+
+.tab-bar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #172635;
+}
+
+.centered-tabs {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+#tab-id-2 {
+  width: auto;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--color-text-primary, white);
+  margin-left: 20px;
+}
+
+.logout-button rux-icon {
+  margin-right: 5px;
+}
+
+.logout-button span {
+  font-size: 14px;
+}
+
+.body-container {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.footer {
+  padding: 10px;
+  background-color: #1b2d3e;
+  color: white;
+  text-align: center;
+}

@@ -1,83 +1,125 @@
+import React, { useState } from "react";
 import axios from "axios";
 import "../css/SignIn.css";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { RuxButton, RuxInput } from "@astrouxds/react";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetMessage, setResetMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/login`,
-        {
-          email,
-          password,
-        },
-      );
+      if (import.meta.env.MODE === 'development') {
+        console.log('Login bypassed for development');
+        navigate('/home');
+        return;
+      }
 
-      if (response.status === 200) {
-        // If successful login, redirect to home
-        const { token } = response.data;
-        // Save token in local storage or context
-        localStorage.setItem("authToken", token);
-        navigate("/home");
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, { email, password });
+      if (response.data.token) {
+        console.log('Login successful');
+        localStorage.setItem('token', response.data.token);
+        navigate('/home');
+      } else {
+        console.log('Unexpected response:', response.data);
       }
     } catch (error) {
-      if (error.response && error.response.status === 403) {
-        alert(error.response.data.message); // Email not verified, alert user
-      } else if (error.response && error.response.status === 302) {
-        const { token } = error.response.data;
-        navigate(`/complete-profile?token=${token}`); // Redirect to complete profile
-      } else if (error.response && error.response.status === 401) {
-        alert(error.response.data.message); // Credentials incorrect
+      if (error.response) {
+        console.error('Login error:', error.response.data.message);
+        // Handle specific error cases
+        if (error.response.status === 403) {
+          console.log('Email not verified. Check your email for verification link.');
+        } else if (error.response.status === 302) {
+          // Redirect to complete profile
+          navigate('/complete-profile', { state: { token: error.response.data.token } });
+        }
+      } else if (error.request) {
+        console.error('No response received:', error.request);
       } else {
-        console.log(error);
-        alert("Error during sign-in, possible server error. Try again.");
+        console.error('Error setting up request:', error.message);
+      }
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/forgot-password`, { email: forgotPasswordEmail });
+      setResetMessage(response.data.message);
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      setResetMessage(error.response?.data?.message || "Error sending reset email. Please try again.");
+      if (error.response?.data?.error) {
+        console.error('Detailed error:', error.response.data.error);
       }
     }
   };
 
   return (
-    <form className="rux-form" onSubmit={handleSubmit}>
-      <div className="sign-in-inputs">
-        <label className="email-label" htmlFor="email">
-          Email
-        </label>
-        <input
-          id="email"
-          type="text"
-          placeholder="Email@astro.com"
-          name="email"
-          required
-          className="email-input"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <label className="password-label" htmlFor="password">
-          Password
-        </label>
-        <input
-          type="text"
-          placeholder="Password"
-          name="password"
-          required
-          className="password-input"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <div className="sign-in-helpers">
-        <p className="forgot-password">Forgot Password?</p>
-      </div>
-      <div className="sign-in-btn-box">
-        <button className="sign-in-btn" type="submit">
-          Sign in
-        </button>
-      </div>
-    </form>
+    <div className="sign-in-container">
+      {!showForgotPassword ? (
+        <form className="rux-form" onSubmit={handleSubmit}>
+          <div className="sign-in-inputs">
+            <RuxInput
+              type="email"
+              label="Email"
+              placeholder="Email@astro.com"
+              required
+              value={email}
+              onRuxinput={(e) => setEmail(e.target.value)}
+            />
+            <RuxInput
+              type="password"
+              label="Password"
+              placeholder="Password"
+              required
+              value={password}
+              onRuxinput={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="sign-in-helpers">
+            <RuxButton 
+              secondary 
+              size="small" 
+              onClick={() => setShowForgotPassword(true)}
+            >
+              Forgot Password?
+            </RuxButton>
+          </div>
+          <div className="sign-in-btn-box">
+            <RuxButton type="submit">Sign in</RuxButton>
+          </div>
+        </form>
+      ) : (
+        <div className="forgot-password-form">
+          <h2>Forgot Password</h2>
+          <form onSubmit={handleForgotPassword}>
+            <RuxInput
+              type="email"
+              label="Email"
+              required
+              value={forgotPasswordEmail}
+              onRuxinput={(e) => setForgotPasswordEmail(e.target.value)}
+            />
+            <RuxButton type="submit">Reset Password</RuxButton>
+          </form>
+          {resetMessage && <p className="reset-message">{resetMessage}</p>}
+          <RuxButton 
+            secondary 
+            size="small" 
+            onClick={() => setShowForgotPassword(false)}
+          >
+            Back to Sign In
+          </RuxButton>
+        </div>
+      )}
+    </div>
   );
 };
 
