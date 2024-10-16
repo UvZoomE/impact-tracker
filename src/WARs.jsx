@@ -34,7 +34,7 @@ function WARs() {
             Authorization: `Bearer ${token}`, // Sending token as a Bearer token
           },
           params: { need: "eachWAR" },
-        },
+        }
       );
       setAllWars(response.data);
     })();
@@ -50,7 +50,7 @@ function WARs() {
       <div className="rate-wars-background">
         {allWars &&
           allWars.map((element) => (
-            <RuxCard key={element._id} className="test">
+            <RuxCard key={element._id} className="whole-card">
               <div slot="header">
                 <RuxClassificationMarking
                   classification={element.classification}
@@ -82,16 +82,21 @@ function WARs() {
                     Impact:{" "}
                     <span className="card-impact">{element.impact}</span>
                   </p>
-                  {element.files ? (
-                    <RuxIcon icon="folder" className="attachment">
-                      File(s) provided
-                    </RuxIcon>
-                  ) : (
-                    ""
-                  )}
                   <p>
                     POC: <span className="card-poc">{element.poc}</span>
                   </p>
+                  {element.files && element.files.length > 0 ? (
+                    <div className="attachment">
+                      <RuxIcon
+                        icon="folder"
+                        className="attachment-icon"
+                        size="small"
+                      />
+                      File(s) provided
+                    </div>
+                  ) : (
+                    ""
+                  )}
                   <RuxButton icon="star" className="war-card-button">
                     Rate WAR!
                   </RuxButton>

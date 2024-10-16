@@ -69,9 +69,10 @@
 
 .attachment {
   color: #56f000;
+  display: flex;
 }
 
-.attachment::part(icon) {
+.attachment-icon::part(icon) {
   color: #56f000;
 }
 

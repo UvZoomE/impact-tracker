@@ -11,6 +11,8 @@ function Dashboard() {
   const [impact, setImpact] = useState("");
   const [poc, setPOC] = useState("");
   const [warCount, setWARCount] = useState(0);
+  const [files, setFiles] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -22,7 +24,7 @@ function Dashboard() {
           headers: {
             Authorization: `Bearer ${token}`, // Sending token as a Bearer token
           },
-        },
+        }
       );
       setPOC(response.data);
       const response2 = await axios.get(
@@ -34,7 +36,7 @@ function Dashboard() {
           params: {
             need: "warCount",
           },
-        },
+        }
       );
       setWARCount(response2.data.warCount);
     };
@@ -49,12 +51,59 @@ function Dashboard() {
   const closeDialog = async (e) => {
     e.preventDefault();
     setDialog(false);
+    setFiles([]);
+  };
+
+  const handleFileChange = (event) => {
+    const file = Object.values(event.target.files);
+    const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
+
+    file.map((eachFile) => {
+      if (eachFile && !allowedTypes.includes(eachFile.type)) {
+        setError("Invalid file type. Please upload a JPEG, PNG, or PDF file.");
+        event.target.value = ""; // Clear the file input
+        setFiles([]); // Reset selected file in state
+        return;
+      }
+    });
+
+    if (event.target.value) {
+      setError(""); // Clear error if file is valid
+      setFiles([file]); // Set the valid file
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let fileUrls = [];
+
     try {
+      // Check if there are any files to upload
+      if (files[0].length > 0) {
+        // Wait for all the file uploads to Cloudinary to complete
+        fileUrls = await Promise.all(
+          files[0].map(async (file) => {
+            const formData = new FormData();
+            formData.append("file", file); // Append the file
+            formData.append("upload_preset", "impact-tracker"); // Set your upload preset
+
+            try {
+              const response = await axios.post(
+                `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`,
+                formData
+              );
+              return response.data.secure_url; // Return the secure URL
+            } catch (error) {
+              console.log("Error uploading file:", error);
+              throw error;
+            }
+          })
+        );
+      }
+
       const token = localStorage.getItem("authToken");
+
+      // Send the collected file URLs to the backend along with other form data
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/wars`,
         {
@@ -63,16 +112,19 @@ function Dashboard() {
           description,
           impact,
           poc,
+          files: fileUrls, // Send the uploaded file URLs
         },
         {
           headers: {
             Authorization: `Bearer ${token}`, // Sending token as a Bearer token
           },
-        },
+        }
       );
-      setDialog(false);
+      setDialog(false); // Close the dialog on success
+      setFiles([]); // Clear the file input
     } catch (err) {
-      console.log(err);
+      console.error("Error during submission", err);
+      setFiles([]); // Clear the file input on error
     }
   };
 
@@ -146,6 +198,15 @@ function Dashboard() {
 
                 <label className="poc-label">POC (Point of Contact):</label>
                 <p className="poc-text">{poc}</p>
+                <label htmlFor="files">Files/ Images: </label>
+                <input
+                  type="file"
+                  id="files"
+                  name="files"
+                  multiple
+                  onChange={handleFileChange}
+                />
+                {error && <p style={{ color: "red" }}>{error}</p>}
 
                 <button type="submit">Submit WAR</button>
               </form>

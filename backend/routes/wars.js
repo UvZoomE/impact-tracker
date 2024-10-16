@@ -3,26 +3,33 @@ import express from "express";
 import WAR from "../models/War.js";
 import User from "../models/User.js";
 import verifyToken from "../middleware/verifyToken.js";
+import cloudinary from "cloudinary";
+
+// Cloudinary configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const warRouter = express.Router();
 
-// POST route to create a new WAR
 warRouter.post("/wars", verifyToken, async (req, res) => {
-  const { classification, title, description, impact, poc } = req.body;
+  const { classification, title, description, impact, poc, files } = req.body;
 
   try {
     // Validate input (you can add more validation here)
     if (!classification || !title || !description || !impact || !poc) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({ message: "All fields are required, files are optional" });
     }
 
-    const user = await User.find({ email: poc });
-
+    // Find user by POC email
+    const user = await User.findOne({ email: poc });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const name = user[0].firstName + " " + user[0].lastName;
+    const name = `${user.firstName} ${user.lastName}`;
 
     // Create a new WAR document
     const newWar = new WAR({
@@ -32,6 +39,7 @@ warRouter.post("/wars", verifyToken, async (req, res) => {
       impact,
       poc,
       name,
+      files: files.length > 0 ? files : null, // Include file URLs if available
     });
 
     // Save to MongoDB
@@ -40,8 +48,8 @@ warRouter.post("/wars", verifyToken, async (req, res) => {
     // Send a success response
     res.status(201).json({ message: "WAR created successfully", war: newWar });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    console.error("Server error:", error);
+    res.status(500).json({ message: "Server error", error });
   }
 });
 

@@ -31,6 +31,9 @@ const WarSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  files: {
+    type: [String],
+  }
 });
 
 const WAR = mongoose.model("War", WarSchema);
