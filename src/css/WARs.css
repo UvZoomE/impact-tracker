@@ -117,3 +117,140 @@
   margin-left: auto;
   margin-right: auto;
 }
+
+.custom-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.custom-dialog {
+  min-width: 400px;
+  max-width: 90vw;
+  max-height: 80vh;
+  padding: 20px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #1b2d3e;
+}
+
+.custom-dialog-header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  margin: 0;
+}
+
+.custom-dialog-header > :nth-child(1) {
+  position: absolute;
+  left: 0;
+}
+
+.custom-dialog-header > :nth-child(3) {
+  position: absolute;
+  right: 0;
+  color: #4dacff;
+}
+
+.rate-war-body {
+  max-height: calc(80vh - 200px); /* Leave room for header and footer */
+  overflow-y: auto;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.rate-war-body p {
+  margin-bottom: 0;
+}
+
+.description-row,
+.poc-row,
+.impact-row {
+  display: flex;
+  align-items: center; /* Vertically centers the content */
+  margin-top: 10px;
+}
+
+.description-row p,
+.poc-row p,
+.impact-row p {
+  margin: 0; /* Remove margin to avoid spacing issues */
+}
+
+.edit-icon {
+  margin-left: 8px; /* Adds space between the text and the icon */
+}
+
+.rate-war-body span {
+  margin-left: 10px;
+  border: 1px solid #4dacff;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.unclassified-version-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.unclassified-version-container label {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.unclassified-version-container rux-button {
+  margin-bottom: 10px;
+}
+
+.unclassified-version-container rux-textarea {
+  margin-bottom: 10px;
+}
+
+.unclassified-bullet-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.unclassified-bullet-container label {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.unclassified-bullet-container rux-button {
+  margin-bottom: 10px;
+}
+
+.unclassified-bullet-container rux-textarea {
+  margin-bottom: 10px;
+}
+
+.custom-dialog-footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.custom-button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.custom-button:hover {
+  background-color: #0056b3;
+}
