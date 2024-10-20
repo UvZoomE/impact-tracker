@@ -24,7 +24,7 @@ function Dashboard() {
           headers: {
             Authorization: `Bearer ${token}`, // Sending token as a Bearer token
           },
-        }
+        },
       );
       setPOC(response.data);
       const response2 = await axios.get(
@@ -36,7 +36,7 @@ function Dashboard() {
           params: {
             need: "warCount",
           },
-        }
+        },
       );
       setWARCount(response2.data.warCount);
     };
@@ -90,14 +90,14 @@ function Dashboard() {
             try {
               const response = await axios.post(
                 `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`,
-                formData
+                formData,
               );
               return response.data.secure_url; // Return the secure URL
             } catch (error) {
               console.log("Error uploading file:", error);
               throw error;
             }
-          })
+          }),
         );
       }
 
@@ -118,7 +118,7 @@ function Dashboard() {
           headers: {
             Authorization: `Bearer ${token}`, // Sending token as a Bearer token
           },
-        }
+        },
       );
       setDialog(false); // Close the dialog on success
       setFiles([]); // Clear the file input

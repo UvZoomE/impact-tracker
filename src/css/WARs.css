@@ -189,6 +189,24 @@
   margin: 0; /* Remove margin to avoid spacing issues */
 }
 
+.edit-impact-text {
+  margin-right: 10px !important;
+}
+
+.edit-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.edit-icons rux-icon:nth-child(1) {
+  color: #56f000;
+}
+
+.edit-icons rux-icon:nth-child(2) {
+  color: #ff3838;
+}
+
 .edit-icon {
   margin-left: 8px; /* Adds space between the text and the icon */
 }

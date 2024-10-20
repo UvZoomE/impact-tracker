@@ -24,6 +24,15 @@ function WARs() {
   const [eprBullet, setEprBullet] = useState("");
   const [addUnclassifiedVersion, setAddUnclassifiedVersion] = useState(false);
   const [unclassifiedBullet, setUnclassifiedBullet] = useState(false);
+  const [newImpact, setNewImpact] = useState("");
+  const [editImpact, setEditImpact] = useState(false);
+  const [originalImpact, setOriginalImpact] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [originalDescription, setOriginalDescription] = useState("");
+  const [currentWAR, setCurrentWAR] = useState("");
+  const [files, setFiles] = useState("");
+  const [error, setError] = useState("");
 
   function formatDate(isoDate) {
     const date = new Date(isoDate);
@@ -42,6 +51,12 @@ function WARs() {
   const handleCloseRateDialog = () => {
     setRateDialog(false);
     setSelectedWar(null); // Clear the selected WAR
+    setNewDescription(null);
+    setNewImpact(null);
+    setRating("");
+    setComment("");
+    setUnclassifiedVersion("");
+    setFiles([]);
   };
 
   useEffect(() => {
@@ -55,17 +70,91 @@ function WARs() {
             Authorization: `Bearer ${token}`, // Sending token as a Bearer token
           },
           params: { need: "eachWAR" },
-        }
+        },
       );
       setAllWars(response.data);
     })();
   }, [eprBullet]);
 
+  const handleFileChange = (event) => {
+    const file = Object.values(event.target.files);
+    const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
+
+    file.map((eachFile) => {
+      if (eachFile && !allowedTypes.includes(eachFile.type)) {
+        setError("Invalid file type. Please upload a JPEG, PNG, or PDF file.");
+        event.target.value = ""; // Clear the file input
+        setFiles([]); // Reset selected file in state
+        return;
+      }
+    });
+
+    if (event.target.value) {
+      setError(""); // Clear error if file is valid
+      setFiles([file]); // Set the valid file
+    }
+  };
+
   const handleRateWarSubmit = async (e) => {
     e.preventDefault();
-    if (!rating) {
-      alert("You need to provide a rating before you can submit.");
-      return;
+    let fileUrls = [];
+
+    try {
+      // Check if there are any files to upload
+      if (files[0].length > 0) {
+        // Wait for all the file uploads to Cloudinary to complete
+        fileUrls = await Promise.all(
+          files[0].map(async (file) => {
+            const formData = new FormData();
+            formData.append("file", file); // Append the file
+            formData.append("upload_preset", "impact-tracker"); // Set your upload preset
+
+            try {
+              const response = await axios.post(
+                `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`,
+                formData,
+              );
+              return response.data.secure_url; // Return the secure URL
+            } catch (error) {
+              console.log("Error uploading file:", error);
+              throw error;
+            }
+          }),
+        );
+      }
+      const token = localStorage.getItem("authToken");
+      const newestDescription = newDescription ? newDescription : null;
+      const newestImpact = newImpact ? newImpact : null;
+
+      if (!rating) {
+        alert("You need to provide a rating before you can submit.");
+        return;
+      }
+
+      if (!comment) {
+        alert("You need to provide comments on your rating, try again.");
+        return;
+      }
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/edited-wars`,
+        {
+          originalWarID: currentWAR._id,
+          newDescription: newestDescription,
+          newImpact: newestImpact,
+          rating,
+          comment,
+          unclassifiedVersion,
+          eprBullet,
+          files: fileUrls ? fileUrls : null,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Sending token as a Bearer token
+          },
+        },
+      );
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -154,24 +243,105 @@ function WARs() {
 
               <div className="rate-war-body">
                 <div className="description-row">
-                  <p>
-                    Description:{" "}
-                    <span className="rate-war-description">
-                      {selectedWar.description}
-                    </span>
-                  </p>
-                  <RuxIcon icon="edit" size="small" className="edit-icon" />
+                  {editDescription ? (
+                    <>
+                      <p className="edit-description-text">Edit Description:</p>
+                      <RuxTextarea
+                        value={newDescription || originalDescription} // Bind the value to newDescription, fallback to originalDescription
+                        onRuxinput={(e) => setNewDescription(e.target.value)} // Update newDescription on change
+                      />
+                      <div className="edit-icons">
+                        <RuxIcon
+                          icon="check"
+                          size="small"
+                          onClick={() => {
+                            setOriginalDescription(newDescription); // Save the newDescription as originalDescription when confirming
+                            setEditDescription(false);
+                          }}
+                        />
+                        <RuxIcon
+                          icon="cancel"
+                          size="small"
+                          onClick={() => {
+                            setNewDescription(originalDescription); // Reset newDescription to originalDescription when canceled
+                            setEditDescription(false);
+                          }}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p>
+                        Description:{" "}
+                        <span className="rate-war-description">
+                          {newDescription || selectedWar.description}{" "}
+                          {/* Display newDescription or fallback */}
+                        </span>
+                      </p>
+                      <RuxIcon
+                        icon="edit"
+                        size="small"
+                        className="edit-icon"
+                        onClick={() => {
+                          setOriginalDescription(
+                            newDescription || selectedWar.description,
+                          ); // Set originalDescription when entering edit mode
+                          setEditDescription(true);
+                        }}
+                      />
+                    </>
+                  )}
                 </div>
 
                 <div className="impact-row">
-                  <p>
-                    Impact:{" "}
-                    <span className="rate-war-description">
-                      {selectedWar.impact}
-                    </span>
-                  </p>
-                  <RuxIcon icon="edit" size="small" className="edit-icon" />
+                  {editImpact ? (
+                    <>
+                      <p className="edit-impact-text">Edit Impact:</p>
+                      <RuxTextarea
+                        value={newImpact || originalImpact} // Bind the value to newImpact, fallback to originalImpact
+                        onRuxinput={(e) => setNewImpact(e.target.value)} // Update newImpact on change
+                      />
+                      <div className="edit-icons">
+                        <RuxIcon
+                          icon="check"
+                          size="small"
+                          onClick={() => {
+                            setOriginalImpact(newImpact); // Save the newImpact as originalImpact when confirming
+                            setEditImpact(false);
+                          }}
+                        />
+                        <RuxIcon
+                          icon="cancel"
+                          size="small"
+                          onClick={() => {
+                            setNewImpact(originalImpact); // Reset newImpact to originalImpact when canceled
+                            setEditImpact(false);
+                          }}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p>
+                        Impact:{" "}
+                        <span className="rate-war-description">
+                          {newImpact || selectedWar.impact}{" "}
+                          {/* Display newImpact or fallback */}
+                        </span>
+                      </p>
+                      <RuxIcon
+                        icon="edit"
+                        size="small"
+                        className="edit-icon"
+                        onClick={() => {
+                          setOriginalImpact(newImpact || selectedWar.impact); // Set originalImpact when entering edit mode
+                          setEditImpact(true);
+                        }}
+                      />
+                    </>
+                  )}
                 </div>
+
                 <div className="poc-row">
                   <p>
                     POC:{" "}
@@ -179,7 +349,6 @@ function WARs() {
                       {selectedWar.poc}
                     </span>
                   </p>
-                  <RuxIcon icon="edit" size="small" className="edit-icon" />
                 </div>
 
                 <p>Rating System: </p>
@@ -191,7 +360,7 @@ function WARs() {
                   id="provide-comments"
                   placeholder="Explain why you are giving this rating for this troop"
                   value={comment}
-                  onChange={setComment}
+                  onRuxinput={(e) => setComment(e.target.value)}
                 />
                 <div className="unclassified-version-container">
                   <label htmlFor="provide-unclassified">
@@ -200,9 +369,9 @@ function WARs() {
                   {addUnclassifiedVersion ? (
                     <RuxTextarea
                       id="provide-unclassified"
-                      placeholder="Provide an unclassified version of this troop's WAR (Optional)"
+                      placeholder="(Optional) Provide an unclassified version of this troop's WAR"
                       value={unclassifiedVersion}
-                      onChange={setUnclassifiedVersion}
+                      onRuxinput={(e) => setUnclassifiedVersion(e.target.value)}
                     />
                   ) : (
                     <RuxButton
@@ -227,9 +396,9 @@ function WARs() {
                       /* 12 point Times New Roman for above description */}
                       <textarea
                         id="provide-bullet"
-                        placeholder="Provide an unclassified EPR/EPB bullet of this troop's WAR (Optional)"
+                        placeholder="(Optional) Provide an unclassified EPR/EPB bullet of this troop's WAR"
                         value={eprBullet}
-                        onInput={(e) => setEprBullet(e.target.value)}
+                        onChange={(e) => setEprBullet(e.target.value)}
                         style={{
                           fontSize: "12pt",
                           width: "764.6778px",
@@ -251,6 +420,15 @@ function WARs() {
                     </RuxButton>
                   )}
                 </div>
+                <label htmlFor="files">Files/ Images: </label>
+                <input
+                  type="file"
+                  id="files"
+                  name="files"
+                  multiple
+                  onChange={handleFileChange}
+                />
+                {error && <p style={{ color: "red" }}>{error}</p>}
               </div>
 
               <div className="custom-dialog-footer">
@@ -261,7 +439,11 @@ function WARs() {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="custom-button">
+                <button
+                  type="submit"
+                  className="custom-button"
+                  onClick={(e) => setCurrentWAR(selectedWar)}
+                >
                   Submit Rating
                 </button>
               </div>

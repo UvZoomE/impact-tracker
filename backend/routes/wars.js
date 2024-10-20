@@ -4,6 +4,7 @@ import WAR from "../models/War.js";
 import User from "../models/User.js";
 import verifyToken from "../middleware/verifyToken.js";
 import cloudinary from "cloudinary";
+import EditWAR from "../models/EditWar.js";
 
 // Cloudinary configuration
 cloudinary.config({
@@ -20,7 +21,9 @@ warRouter.post("/wars", verifyToken, async (req, res) => {
   try {
     // Validate input (you can add more validation here)
     if (!classification || !title || !description || !impact || !poc) {
-      return res.status(400).json({ message: "All fields are required, files are optional" });
+      return res
+        .status(400)
+        .json({ message: "All fields are required, files are optional" });
     }
 
     // Find user by POC email
@@ -70,6 +73,49 @@ warRouter.get("/wars", verifyToken, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+warRouter.post("/edited-wars", verifyToken, async (req, res) => {
+  const {
+    originalWarID,
+    newDescription,
+    newImpact,
+    rating,
+    comment,
+    unclassifiedVersion,
+    eprBullet,
+    files,
+  } = req.body;
+
+  try {
+    // Validate input (you can add more validation here)
+    if (!originalWarID) {
+      return res.status(400).json({ message: "Original ID of WAR required" });
+    }
+
+    // Create a new WAR document
+    const newWar = new EditWAR({
+      originalWarID,
+      newDescription,
+      newImpact,
+      rating,
+      comment,
+      unclassifiedVersion,
+      eprBullet,
+      files: files && files.length > 0 ? files : null, // Include file URLs if available
+    });
+
+    // Save to MongoDB
+    await newWar.save();
+
+    // Send a success response
+    res
+      .status(201)
+      .json({ message: "WAR suggestion saved successfully", war: newWar });
+  } catch (error) {
+    console.error("Server error:", error);
+    res.status(500).json({ message: "Server error", error });
   }
 });
 

@@ -33,7 +33,7 @@ const WarSchema = new Schema({
   },
   files: {
     type: [String],
-  }
+  },
 });
 
 const WAR = mongoose.model("War", WarSchema);
