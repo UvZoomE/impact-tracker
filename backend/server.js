@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import authRouter from "./routes/signin.js";
 import userRouter from "./routes/userInfo.js";
 import warRouter from "./routes/wars.js";
+import sitrepRouter from "./routes/sitrep.js";
 
 const app = express();
 
@@ -13,7 +14,7 @@ app.use(express.json());
 
 app.use(cors());
 
-app.use(registerRouter, authRouter, userRouter, warRouter);
+app.use(registerRouter, authRouter, userRouter, warRouter, sitrepRouter);
 
 // Connect to MongoDB and start server
 mongoose
@@ -23,7 +24,7 @@ mongoose
   })
   .then(() => {
     app.listen(process.env.PORT || 5000, () =>
-      console.log("Server running on port 5000"),
+      console.log("Server running on port 5000")
     );
   })
   .catch((err) => console.log(err));

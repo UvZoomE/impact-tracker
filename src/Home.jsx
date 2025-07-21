@@ -1,5 +1,5 @@
 // Add Docker compose once you set up your backend and other microservices
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   RuxClock,
   RuxMonitoringIcon,
@@ -11,10 +11,10 @@ import "@astrouxds/astro-web-components/dist/components/rux-tab";
 import "@astrouxds/astro-web-components/dist/components/rux-tabs";
 import "./css/Home.css";
 import Dashboard from "./Dashboard";
-import Settings from "./Settings";
 import WARs from "./WARs";
-import Messages from "./Messages";
 import "./css/Dashboard.css";
+import Leaderboard from "./Leaderboard";
+import SITREP from "./SITREP";
 
 const Home = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -42,11 +42,11 @@ const Home = () => {
             <RuxTab id="tab-id-2-2" onClick={(e) => setActiveTab("wars")}>
               Rate WARs
             </RuxTab>
-            <RuxTab id="tab-id-2-3" onClick={(e) => setActiveTab("messages")}>
-              Messages
+            <RuxTab id="tab-id-2-4" onClick={(e) => setActiveTab("sitrep")}>
+              SITREP
             </RuxTab>
-            <RuxTab id="tab-id-2-4" onClick={(e) => setActiveTab("settings")}>
-              Settings
+            <RuxTab id="tab-id-2-3" onClick={(e) => setActiveTab("leaderboard")}>
+              Leaderboard
             </RuxTab>
           </RuxTabs>
         </div>
@@ -54,10 +54,10 @@ const Home = () => {
           <Dashboard />
         ) : activeTab === "wars" ? (
           <WARs />
-        ) : activeTab === "messages" ? (
-          <Messages />
-        ) : activeTab === "settings" ? (
-          <Settings />
+        ) : activeTab === "sitrep" ? (
+          <SITREP />
+        ) : activeTab === "leaderboard" ? (
+          <Leaderboard />
         ) : (
           ""
         )}

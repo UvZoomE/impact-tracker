@@ -13,6 +13,12 @@ function Dashboard() {
   const [warCount, setWARCount] = useState(0);
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
+  // This function will be called to close the dialog
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -24,9 +30,9 @@ function Dashboard() {
           headers: {
             Authorization: `Bearer ${token}`, // Sending token as a Bearer token
           },
-        },
+        }
       );
-      setPOC(response.data);
+      setPOC(response.data.email);
       const response2 = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/wars`,
         {
@@ -36,7 +42,7 @@ function Dashboard() {
           params: {
             need: "warCount",
           },
-        },
+        }
       );
       setWARCount(response2.data.warCount);
     };
@@ -76,28 +82,39 @@ function Dashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let fileUrls = [];
+    console.log(files);
 
     try {
       // Check if there are any files to upload
-      if (files[0].length > 0) {
+      if (files && files.length != 0) {
         // Wait for all the file uploads to Cloudinary to complete
         fileUrls = await Promise.all(
           files[0].map(async (file) => {
             const formData = new FormData();
+            console.log(file);
             formData.append("file", file); // Append the file
-            formData.append("upload_preset", "impact-tracker"); // Set your upload preset
+            if (file.type.includes("image")) {
+              formData.append("upload_preset", "impact-tracker-images"); // Set your upload preset
+            } else if (file.type.includes("pdf")) {
+              formData.append("upload_preset", "impact-tracker-files"); // Set your upload preset
+            } else {
+              alert(
+                "You can only submit files of image/ pdf type - try again."
+              );
+              return;
+            }
 
             try {
               const response = await axios.post(
                 `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`,
-                formData,
+                formData
               );
-              return response.data.secure_url; // Return the secure URL
+              return response.data; // Return the secure URL
             } catch (error) {
               console.log("Error uploading file:", error);
               throw error;
             }
-          }),
+          })
         );
       }
 
@@ -118,7 +135,7 @@ function Dashboard() {
           headers: {
             Authorization: `Bearer ${token}`, // Sending token as a Bearer token
           },
-        },
+        }
       );
       setDialog(false); // Close the dialog on success
       setFiles([]); // Clear the file input
@@ -126,6 +143,14 @@ function Dashboard() {
       console.error("Error during submission", err);
       setFiles([]); // Clear the file input on error
     }
+  };
+
+  const displayWARs = async (e) => {
+    e.preventDefault();
+    setDialogOpen(true);
+    console.log(
+      "Will soon display each WAR the user has submitted in a Dialog"
+    );
   };
 
   return (
@@ -216,7 +241,7 @@ function Dashboard() {
         </div>
       )}
 
-      <div className="card-container">
+      <div className="card-container" onClick={displayWARs}>
         <div slot="header" className="card-header">
           <h4>WARs Submitted</h4>
           <RuxIcon icon="description" size="small" />
@@ -232,6 +257,19 @@ function Dashboard() {
           <RuxIcon icon="trending-up" size="small" className="icons" />
         </div>
       </div>
+
+      {/* This is the dialog that pops up */}
+      {isDialogOpen && (
+        <div className="dialog-overlay">
+          <div className="dialog-content">
+            <h2>Dialog Title 팝업</h2>
+            <p>
+              This is the content of your dialog. You can put anything here.
+            </p>
+            <button onClick={() => setDialogOpen(false)}>Close</button>
+          </div>
+        </div>
+      )}
       <div className="card-container">
         <div slot="header" className="card-header">
           <h4>

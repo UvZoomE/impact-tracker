@@ -6,13 +6,14 @@ import {
   RuxClassificationMarking,
   RuxIcon,
   RuxButton,
-  RuxDialog,
   RuxTextarea,
+  RuxDialog
 } from "@astrouxds/react";
 import "./css/WARs.css";
 import axios from "axios";
 import { Avatar } from "@mui/material";
 import StarRating from "./StarRating";
+import Carousel from "./Carousel";
 
 function WARs() {
   const [allWars, setAllWars] = useState([]);
@@ -33,6 +34,10 @@ function WARs() {
   const [currentWAR, setCurrentWAR] = useState("");
   const [files, setFiles] = useState("");
   const [error, setError] = useState("");
+  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false); // Secondary dialog visibility
+  const [imageSrc, setImageSrc] = useState('');
+  const [imageArray, setImageArray] = useState([]);
+  const [currentUser, setCurrentUser] = useState("");
 
   function formatDate(isoDate) {
     const date = new Date(isoDate);
@@ -70,9 +75,10 @@ function WARs() {
             Authorization: `Bearer ${token}`, // Sending token as a Bearer token
           },
           params: { need: "eachWAR" },
-        },
+        }
       );
-      setAllWars(response.data);
+      setCurrentUser(response.data.email);
+      setAllWars(response.data.eachWAR);
     })();
   }, [eprBullet]);
 
@@ -101,25 +107,25 @@ function WARs() {
 
     try {
       // Check if there are any files to upload
-      if (files[0].length > 0) {
+      if (files && files[0].length > 0) {
         // Wait for all the file uploads to Cloudinary to complete
         fileUrls = await Promise.all(
           files[0].map(async (file) => {
             const formData = new FormData();
             formData.append("file", file); // Append the file
-            formData.append("upload_preset", "impact-tracker"); // Set your upload preset
+            formData.append("upload_preset", "impact-tracker-images"); // Set your upload preset
 
             try {
               const response = await axios.post(
                 `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`,
-                formData,
+                formData
               );
               return response.data.secure_url; // Return the secure URL
             } catch (error) {
               console.log("Error uploading file:", error);
               throw error;
             }
-          }),
+          })
         );
       }
       const token = localStorage.getItem("authToken");
@@ -139,6 +145,7 @@ function WARs() {
         `${import.meta.env.VITE_BACKEND_URL}/edited-wars`,
         {
           originalWarID: currentWAR._id,
+          editsMadeBy: currentUser,
           newDescription: newestDescription,
           newImpact: newestImpact,
           rating,
@@ -151,11 +158,28 @@ function WARs() {
           headers: {
             Authorization: `Bearer ${token}`, // Sending token as a Bearer token
           },
-        },
+        }
       );
+      setRateDialog(false);
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleIconClick = (e, src) => {
+    e.preventDefault();
+    if (src.length === 1) {
+      setImageSrc(src);
+    } else {
+      setImageArray(src);
+    }
+    setIsImageDialogOpen(true); // Open the image dialog
+  };
+
+  const handleCloseImageDialog = (e) => {
+    setIsImageDialogOpen(false);
+    setImageSrc('');
+    setImageArray([]);
   };
 
   return (
@@ -284,7 +308,7 @@ function WARs() {
                         className="edit-icon"
                         onClick={() => {
                           setOriginalDescription(
-                            newDescription || selectedWar.description,
+                            newDescription || selectedWar.description
                           ); // Set originalDescription when entering edit mode
                           setEditDescription(true);
                         }}
@@ -420,6 +444,16 @@ function WARs() {
                     </RuxButton>
                   )}
                 </div>
+                {selectedWar.files && selectedWar.files.length > 0 ? (
+                  <div>
+                      <div className="current-images">
+                        <p>File Provided:</p>
+                        <RuxIcon icon="image" onClick={(e) => handleIconClick(e, selectedWar.files)} />
+                      </div>
+                  </div>
+                ) : (
+                  ""
+                )}
                 <label htmlFor="files">Files/ Images: </label>
                 <input
                   type="file"
@@ -449,6 +483,23 @@ function WARs() {
               </div>
             </form>
           </div>
+          {/* Secondary dialog for displaying the image or file */}
+          {isImageDialogOpen && (
+            <RuxDialog
+              open={isImageDialogOpen}
+              onRuxdialogclosed={handleCloseImageDialog}
+              style={{ zIndex: 9999 }} // Ensure it's on top of the main dialog
+            >
+              {imageSrc && imageSrc.length === 1 ? (
+              <img
+                src={imageSrc[0].secure_url}
+                alt="Selected Icon"
+                style={{ maxWidth: "100%" }}
+              />) : imageArray.length > 0 ? (
+                <Carousel images={imageArray}/>
+              ) : ""}
+            </RuxDialog>
+          )}
         </div>
       )}
     </div>

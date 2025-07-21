@@ -32,8 +32,26 @@ const WarSchema = new Schema({
     default: Date.now,
   },
   files: {
-    type: [String],
+    type: [{
+      secure_url: {
+        type: String,
+      },
+      height: {
+        type: String,
+      },
+      width: {
+        type: String,
+      },
+    }],
   },
+  numberOfRatings: {
+    type: Number,
+    default: 0,
+  },
+  averageRatings: {
+    type: Number,
+    default: 0.0,
+  }
 });
 
 const WAR = mongoose.model("War", WarSchema);

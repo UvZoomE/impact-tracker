@@ -18,7 +18,8 @@ userRouter.get("/api/user", verifyToken, async (req, res) => {
     if (req.token !== user.verificationToken) {
       return res.status(401).json({ error: "Invalid token" });
     }
-    res.json(user.email); // Send user data as JSON
+    
+    res.json(user); // Send user data as JSON
   } catch (error) {
     res.status(500).json({ error: "Server error" });
   }

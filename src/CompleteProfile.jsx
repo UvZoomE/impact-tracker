@@ -12,6 +12,7 @@ const CompleteProfile = () => {
   const [rank, setRank] = useState("");
   const [DoDID, setDoDID] = useState("");
   const [unit, setUnit] = useState("");
+  const [workSection, setWorkSection] = useState("");
   const [role, setRole] = useState("");
   const [reason, setReason] = useState("");
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const CompleteProfile = () => {
           },
         );
         // Check if the email exists and is valid
-        if (response.data && response.data.includes("@")) {
+        if (response.data && response.data.email.includes("@")) {
           return token;
         } else {
           return null; // If the email is invalid, return null
@@ -98,6 +99,7 @@ const CompleteProfile = () => {
       rank,
       DoDID,
       unit,
+      workSection,
       role,
       reason,
     };
@@ -217,6 +219,18 @@ const CompleteProfile = () => {
               required
               className="unit-input"
               onChange={(e) => setUnit(e.target.value)}
+            />
+            <label className="work-section-label" htmlFor="work-section">
+              Work Section
+            </label>
+            <input
+              id="work-section"
+              type="text"
+              placeholder="Please enter your work section"
+              name="work-section"
+              required
+              className="work-section-input"
+              onChange={(e) => setWorkSection(e.target.value)}
             />
             <label className="role-choice" htmlFor="role">
               Role:

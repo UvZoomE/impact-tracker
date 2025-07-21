@@ -2,8 +2,11 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const EditWARSchema = new Schema({
+const EditedWARsSchema = new Schema({
   originalWarID: {
+    type: String,
+  },
+  editsMadeBy: {
     type: String,
   },
   newDescription: {
@@ -33,6 +36,6 @@ const EditWARSchema = new Schema({
   },
 });
 
-const EditWAR = mongoose.model("EditWAR", EditWARSchema);
+const EditedWARs = mongoose.model("EditedWARs", EditedWARsSchema);
 
-export default EditWAR;
+export default EditedWARs;

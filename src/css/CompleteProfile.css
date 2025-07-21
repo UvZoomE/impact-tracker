@@ -131,6 +131,20 @@ body {
   width: 100%;
 }
 
+.work-section-label {
+  color: #d4d8dd;
+  margin-bottom: 10px;
+}
+
+.work-section-input {
+  margin-bottom: 20px;
+  background-color: #101923;
+  color: #d4d8dd;
+  border-color: #2b659b;
+  height: 24px;
+  width: 100%;
+}
+
 .role-choice {
   color: #d4d8dd;
   margin-bottom: 10px;

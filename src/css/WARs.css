@@ -254,6 +254,12 @@
   margin-bottom: 10px;
 }
 
+.current-images {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 .custom-dialog-footer {
   display: flex;
   justify-content: space-between;

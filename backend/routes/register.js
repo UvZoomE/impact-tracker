@@ -109,6 +109,7 @@ registerRouter.post("/complete-profile", verifyToken, async (req, res) => {
     user.rank = userObj.rank;
     user.DoDID = userObj.DoDID;
     user.unit = userObj.unit;
+    user.workSection = userObj.workSection;
     user.role = userObj.role;
     user.reason = userObj.reason;
     user.verificationToken = generateToken(user.email);

@@ -4,7 +4,7 @@ import WAR from "../models/War.js";
 import User from "../models/User.js";
 import verifyToken from "../middleware/verifyToken.js";
 import cloudinary from "cloudinary";
-import EditWAR from "../models/EditWar.js";
+import EditedWARs from "../models/EditedWars.js";
 
 // Cloudinary configuration
 cloudinary.config({
@@ -68,7 +68,7 @@ warRouter.get("/wars", verifyToken, async (req, res) => {
       res.status(200).json({ warCount });
     } else if (need === "eachWAR") {
       const eachWAR = await WAR.find();
-      res.status(200).json(eachWAR);
+      res.status(200).json({ eachWAR, email });
     }
   } catch (error) {
     console.error(error);
@@ -79,6 +79,7 @@ warRouter.get("/wars", verifyToken, async (req, res) => {
 warRouter.post("/edited-wars", verifyToken, async (req, res) => {
   const {
     originalWarID,
+    editsMadeBy,
     newDescription,
     newImpact,
     rating,
@@ -88,15 +89,33 @@ warRouter.post("/edited-wars", verifyToken, async (req, res) => {
     files,
   } = req.body;
 
+  const numberOfRatings = (await WAR.find({_id: originalWarID}))[0].numberOfRatings;
+  const existingAverageRating = (await WAR.find({_id: originalWarID}))[0].averageRatings;
+
   try {
     // Validate input (you can add more validation here)
     if (!originalWarID) {
       return res.status(400).json({ message: "Original ID of WAR required" });
     }
 
+    const newAverage =
+      numberOfRatings === 0
+        ? rating // If no ratings yet, the first rating becomes the average
+        : (existingAverageRating * numberOfRatings + rating) /
+          (numberOfRatings + 1);
+
+    await WAR.updateOne(
+      { _id: originalWarID },
+      {
+        $inc: { numberOfRatings: 1 },
+        $set: { averageRatings: newAverage },
+      }
+    );
+
     // Create a new WAR document
-    const newWar = new EditWAR({
+    const newWar = new EditedWARs({
       originalWarID,
+      editsMadeBy,
       newDescription,
       newImpact,
       rating,

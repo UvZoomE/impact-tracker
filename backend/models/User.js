@@ -32,6 +32,12 @@ const userSchema = new mongoose.Schema({
       return this.profileCompleted;
     },
   },
+  workSection: {
+    type: String,
+    required: function () {
+      return this.profileCompleted;
+    },
+  },
   role: {
     type: String,
     required: function () {
