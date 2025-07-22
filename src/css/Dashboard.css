@@ -185,7 +185,7 @@ select::placeholder {
   color: white;
 }
 
-/* Basic styling for the dialog */
+/* --- DIALOG STYLES --- */
 .dialog-overlay {
   position: fixed;
   top: 0;
@@ -200,11 +200,34 @@ select::placeholder {
 }
 
 .dialog-content {
-  background: white;
+  /* 1. Updated background color */
+  background: #101923;
   padding: 2rem;
   border-radius: 8px;
   text-align: center;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* 2. Title color set to white */
+.dialog-content h2 {
+  color: white;
+}
+
+/* 3. Subtext color set to #4dacff */
+.dialog-content p {
+  color: #4dacff;
+}
+
+/* Optional: Styled button to match the new theme */
+.dialog-content button {
+  background-color: #4dacff;
+  color: #101923;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 1rem;
 }
 
 .rating {

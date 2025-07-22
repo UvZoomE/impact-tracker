@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { RuxIcon, RuxClassificationMarking } from "@astrouxds/react";
 import "./css/Dashboard.css";
 import axios from "axios";
+import Dialog from "./Dialog.jsx";
 
 function Dashboard() {
   const [dialog, setDialog] = useState(false);
@@ -14,11 +15,6 @@ function Dashboard() {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const [isDialogOpen, setDialogOpen] = useState(false);
-
-  // This function will be called to close the dialog
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
-  };
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -147,10 +143,7 @@ function Dashboard() {
 
   const displayWARs = async (e) => {
     e.preventDefault();
-    setDialogOpen(true);
-    console.log(
-      "Will soon display each WAR the user has submitted in a Dialog"
-    );
+    setDialogOpen(!isDialogOpen);
   };
 
   return (
@@ -263,10 +256,7 @@ function Dashboard() {
         <div className="dialog-overlay">
           <div className="dialog-content">
             <h2>Dialog Title 팝업</h2>
-            <p>
-              This is the content of your dialog. You can put anything here.
-            </p>
-            <button onClick={() => setDialogOpen(false)}>Close</button>
+            <Dialog isOpen={isDialogOpen} onClose={displayWARs} />
           </div>
         </div>
       )}

@@ -58,6 +58,7 @@ warRouter.post("/wars", verifyToken, async (req, res) => {
 
 // GET route to fetch all WARs associated with the current user's email
 warRouter.get("/wars", verifyToken, async (req, res) => {
+  console.log("req.email:", req.query);
   const email = req.email; // Assuming email is stored in the token
   const { need } = req.query;
   try {

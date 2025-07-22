@@ -1,0 +1,132 @@
+/* Using CSS variables for easy theme changes */
+:root {
+  --card-bg-color: #101923;
+  --card-border-color: #4dacff;
+  --card-shadow-color: rgba(0, 0, 0, 0.1);
+  --text-color: white;
+  --link-color: #007bff;
+  --link-hover-color: #0056b3;
+}
+
+.dialog-body {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Main container for the list of wars */
+.wars-list {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column; /* Allows items to wrap to the next line on smaller screens */
+  gap: 20px; /* Space between cards */
+  padding: 20px;
+  justify-content: center;
+  /* Add these two properties for scrolling */
+  overflow-y: auto; /* Enables vertical scrolling when content overflows */
+}
+
+/* Individual war item card styling */
+.war-item {
+  background-color: var(--card-bg-color);
+  border: 1px solid var(--card-border-color);
+  border-radius: 8px; /* Rounded corners */
+  padding: 20px;
+  box-shadow: 0 4px 8px var(--card-shadow-color); /* Subtle shadow effect */
+  transition: transform 0.2s ease-in-out; /* Smooth transition on hover */
+}
+
+.war-item:hover {
+  transform: translateY(-5px); /* Lifts the card slightly on hover */
+}
+
+/* Header section containing the title and classification */
+.war-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.war-classification {
+  width: 100%;
+}
+
+.war-item-title {
+  margin-right: auto;
+  margin-left: auto;
+  width: fit-content;
+  padding-bottom: 5px;
+}
+
+.war-item-title h3 {
+  margin: 0;
+  padding: 0;
+  color: var(--text-color);
+}
+
+.line-for-title {
+  /* Remove the default browser border */
+  border: none;
+
+  /* Define the line's thickness */
+  height: 1px;
+
+  /* Set the line color */
+  background-color: var(--card-border-color);
+}
+
+/* Paragraph styling for description, impact, etc. */
+.war-item p {
+  color: var(--text-color);
+  line-height: 1.6;
+  margin: 10px 0;
+}
+
+.war-item span {
+  border: 1px solid var(--card-border-color);
+  border-radius: 4px;
+  padding: 5px;
+}
+
+/* Container for attached files */
+.war-files {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.war-files h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+/* Styling for individual files (images or links) */
+.file-item {
+  margin-bottom: 10px;
+}
+
+/* Image styling */
+.war-image {
+  max-width: 100%; /* Ensures image is responsive and fits container */
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid var(--card-border-color);
+}
+
+/* PDF link styling to make it look like a button */
+.file-item a {
+  display: inline-block;
+  background-color: var(--link-color);
+  color: #fff;
+  padding: 8px 15px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.file-item a:hover {
+  background-color: var(--link-hover-color);
+}
