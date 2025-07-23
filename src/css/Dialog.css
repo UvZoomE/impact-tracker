@@ -8,6 +8,21 @@
   --link-hover-color: #0056b3;
 }
 
+.buttons-in-header {
+  display: flex;
+  flex-direction: row;
+}
+
+.search-button {
+  margin-right: auto;
+}
+
+.dialog-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .dialog-body {
   max-height: 400px;
   overflow-y: auto;
@@ -91,9 +106,7 @@
 
 /* Container for attached files */
 .war-files {
-  margin-top: 20px;
   padding-top: 15px;
-  border-top: 1px solid #eee;
 }
 
 .war-files h4 {
@@ -115,18 +128,24 @@
   border: 1px solid var(--card-border-color);
 }
 
-/* PDF link styling to make it look like a button */
-.file-item a {
-  display: inline-block;
-  background-color: var(--link-color);
-  color: #fff;
-  padding: 8px 15px;
-  text-decoration: none;
-  border-radius: 4px;
-  font-weight: bold;
-  transition: background-color 0.2s;
+.line-above-ratings {
+  border: 1px solid var(--card-border-color);
 }
 
-.file-item a:hover {
-  background-color: var(--link-hover-color);
+.comment-number {
+  color: #4dacff;
+  font-size: x-large;
+}
+
+.file-swiper {
+  width: 250px; /* Adjust width as needed */
+  padding: 0 40px; /* Make room for arrows */
+  box-sizing: border-box;
+}
+
+.file-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
 }

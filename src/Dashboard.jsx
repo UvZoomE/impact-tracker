@@ -148,9 +148,9 @@ function Dashboard() {
 
   return (
     <div className="cards-container">
-      <button class="war-button" onClick={handleCreateWAR}>
+      <button className="war-button" onClick={handleCreateWAR}>
         <span>Create a WAR</span>
-        <span class="plus-icon">+</span>
+        <span className="plus-icon">+</span>
       </button>
 
       {/* Dialog */}

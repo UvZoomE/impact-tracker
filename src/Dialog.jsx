@@ -1,7 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { RuxIcon, RuxClassificationMarking, RuxButton } from "@astrouxds/react";
+import {
+  RuxIcon,
+  RuxClassificationMarking,
+  RuxButton,
+  RuxTooltip,
+} from "@astrouxds/react";
 import "./css/Dialog.css";
 import axios from "axios";
+import StarRating from "./StarRating";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 function Dialog({ isOpen, onClose }) {
   // Set initial state to null for cleaner checks
@@ -46,6 +60,13 @@ function Dialog({ isOpen, onClose }) {
     }
   };
 
+  // This function opens a single file's URL
+  const handleSingleFileOpen = (fileToOpen) => {
+    if (fileToOpen && fileToOpen.secure_url) {
+      window.open(fileToOpen.secure_url, "_blank", "noopener,noreferrer");
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -53,8 +74,14 @@ function Dialog({ isOpen, onClose }) {
     <div className="dialog-overlay" onClick={handleOverlayClick}>
       {/* The rest of your content is inside this div, so clicks on it won't close the dialog */}
       <div className="dialog-content">
-        <div className="dialog-header">
-          <h2>Your Submitted WARs</h2>
+        <div className="buttons-in-header">
+          <RuxButton
+            className="search-button"
+            onClick={(e) => onClose(e)}
+            iconOnly
+          >
+            <RuxIcon icon="search" size="medium" />
+          </RuxButton>
           <RuxButton
             className="close-button"
             onClick={(e) => onClose(e)}
@@ -62,6 +89,9 @@ function Dialog({ isOpen, onClose }) {
           >
             <RuxIcon icon="close" size="medium" />
           </RuxButton>
+        </div>
+        <div className="dialog-header">
+          <h2>Your Submitted WARs</h2>
         </div>
         <div className="dialog-body">
           {loading && <p>Loading WARs...</p>}
@@ -107,27 +137,51 @@ function Dialog({ isOpen, onClose }) {
                     {war.files && war.files.length > 0 && (
                       <div className="war-files">
                         <h4>Attached Files:</h4>
-                        {war.files.map((file, index) => (
-                          <div key={index} className="file-item">
-                            {file.resource_type === "image" ? (
-                              <img
-                                src={file.secure_url}
-                                alt={`File ${index + 1}`}
-                                className="war-image"
-                              />
-                            ) : (
-                              <a
-                                href={file.secure_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                View PDF
-                              </a>
-                            )}
-                          </div>
-                        ))}
+
+                        {/* Swiper Component for the button gallery */}
+                        <Swiper
+                          // Add required Swiper modules
+                          modules={[Navigation, Pagination]}
+                          // Show one button at a time
+                          slidesPerView={1}
+                          // Add space between slides if you show more than one
+                          spaceBetween={10}
+                          // Enable arrow navigation
+                          navigation
+                          // Enable clickable pagination dots
+                          pagination={{ clickable: true }}
+                          className="file-swiper" // Optional: for custom styling
+                        >
+                          {war.files.map((file, index) => (
+                            <SwiperSlide key={file.public_id || index}>
+                              <div className="file-item">
+                                <RuxButton
+                                  onClick={() => handleSingleFileOpen(file)}
+                                >
+                                  {/* Dynamically name each button */}
+                                  View File #{index + 1}
+                                </RuxButton>
+                              </div>
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
                       </div>
                     )}
+                    <hr className="line-above-ratings" />
+                    <p>Average Rating: </p>
+                    <RuxTooltip
+                      message={`Based on ${war.numberOfRatings} ratings.`}
+                      placement="bottom"
+                      delay={0}
+                    >
+                      <StarRating rating={war.averageRatings} />
+                    </RuxTooltip>
+                    <p>
+                      Comments:{" "}
+                      <strong className="comment-number">
+                        {war.numberOfComments || 0}
+                      </strong>
+                    </p>
                   </div>
                 ))}
               </div>
