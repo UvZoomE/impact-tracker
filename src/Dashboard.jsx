@@ -15,6 +15,7 @@ function Dashboard() {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const [averageRatings, setAverageRatings] = useState(0);
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -40,7 +41,28 @@ function Dashboard() {
           },
         }
       );
-      setWARCount(response2.data.warCount);
+
+      const newWarCount = response2.data.warCount;
+      setWARCount(newWarCount);
+
+      const response3 = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/wars`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Sending token as a Bearer token
+          },
+          params: {
+            need: "eachWAR",
+          },
+        }
+      );
+      const sumOfRatings = response3.data.eachWAR.reduce(
+        (accumulator, currentValue) =>
+          accumulator + currentValue.averageRatings,
+        0
+      );
+      const averageRating = (sumOfRatings / newWarCount).toFixed(1);
+      setAverageRatings(averageRating);
     };
     getUserInfo();
   }, [dialog]);
@@ -78,7 +100,6 @@ function Dashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let fileUrls = [];
-    console.log(files);
 
     try {
       // Check if there are any files to upload
@@ -87,7 +108,6 @@ function Dashboard() {
         fileUrls = await Promise.all(
           files[0].map(async (file) => {
             const formData = new FormData();
-            console.log(file);
             formData.append("file", file); // Append the file
             if (file.type.includes("image")) {
               formData.append("upload_preset", "impact-tracker-images"); // Set your upload preset
@@ -244,10 +264,21 @@ function Dashboard() {
         </div>
         <div slot="footer" className="card-footer">
           <h5>
-            Averaging a <strong className="rating">4.5</strong> rating from
-            others
+            Averaging a{" "}
+            <strong
+              className={`${averageRatings >= 4 ? "goodRating" : averageRatings >= 2.7 ? "averageRating" : "badRating"}`}
+            >
+              {averageRatings}
+            </strong>{" "}
+            rating from others
           </h5>
-          <RuxIcon icon="trending-up" size="small" className="icons" />
+          {averageRatings >= 4 ? (
+            <RuxIcon icon="trending-up" size="small" className="icons" />
+          ) : averageRatings >= 2.7 ? (
+            <RuxIcon icon="trending-flat" size="small" className="flat-icon" />
+          ) : (
+            <RuxIcon icon="trending-down" size="small" className="down-icon" />
+          )}
         </div>
       </div>
 

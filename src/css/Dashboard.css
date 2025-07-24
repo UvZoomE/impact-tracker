@@ -230,10 +230,26 @@ select::placeholder {
   margin-top: 1rem;
 }
 
-.rating {
+.goodRating {
   color: #56f000;
+}
+
+.averageRating {
+  color: #fce83a;
+}
+
+.badRating {
+  color: #FF3838;
 }
 
 .icons {
   color: #56f000;
+}
+
+.flat-icon {
+  color: #fce83a;
+}
+
+.down-icon {
+  color: #FF3838;
 }

@@ -14,7 +14,7 @@ function StarRating({ rating, setRating }) {
           icon="star"
           size="small"
           onClick={() => handleStarClick(index)}
-          className={index < rating ? "filled-star" : "unfilled-star"}
+          className={index < Math.round(rating) ? "filled-star" : "unfilled-star"}
         />
       ))}
     </div>
