@@ -17,6 +17,10 @@
   margin-right: auto;
 }
 
+.back-button {
+  margin-right: auto;
+}
+
 .dialog-header {
   display: flex;
   flex-direction: column;
