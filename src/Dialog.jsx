@@ -127,8 +127,74 @@ function Dialog({ isOpen, onClose }) {
             wars.eachWAR &&
             wars.eachWAR.length > 0 && (
               <div className="wars-list">
-                {warViewer.title && warViewer.title.length > 0 ? (
-                  <p>hi</p>
+                {warViewer.title && warViewer.title.length > 0 ? ( // Left off here (down)
+                  <div key={warViewer._id} className="war-item">
+                    <div className="war-item-header">
+                      {warViewer.classification && (
+                        <RuxClassificationMarking
+                          classification={warViewer.classification}
+                          className="war-classification"
+                        />
+                      )}
+                    </div>
+                    <p>
+                      Description: <span>{warViewer.description}</span>
+                    </p>
+                    <p>
+                      Impact: <span>{warViewer.impact}</span>
+                    </p>
+                    <p>
+                      POC: <span>{warViewer.poc}</span>
+                    </p>
+                    {warViewer.files && warViewer.files.length > 0 && (
+                      <div className="war-files">
+                        <h4>Attached Files:</h4>
+
+                        {/* Swiper Component for the button gallery */}
+                        <Swiper
+                          // Add required Swiper modules
+                          modules={[Navigation, Pagination]}
+                          // Show one button at a time
+                          slidesPerView={1}
+                          // Add space between slides if you show more than one
+                          spaceBetween={10}
+                          // Enable arrow navigation
+                          navigation
+                          // Enable clickable pagination dots
+                          pagination={{ clickable: true }}
+                          className="file-swiper" // Optional: for custom styling
+                        >
+                          {warViewer.files.map((file, index) => (
+                            <SwiperSlide key={file.public_id || index}>
+                              <div className="file-item">
+                                <RuxButton
+                                  onClick={() => handleSingleFileOpen(file)}
+                                >
+                                  {/* Dynamically name each button */}
+                                  View File #{index + 1}
+                                </RuxButton>
+                              </div>
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
+                      </div>
+                    )}
+                    <hr className="line-above-ratings" />
+                    <p>Average Rating: </p>
+                    <RuxTooltip
+                      message={`Based on ${warViewer.numberOfRatings} ratings.`}
+                      placement="bottom"
+                      delay={0}
+                    >
+                      <StarRating rating={warViewer.averageRatings} />
+                    </RuxTooltip>
+                    <p>
+                      Comments:{" "}
+                      <strong className="comment-number">
+                        {warViewer.numberOfComments || 0}
+                      </strong>
+                    </p>
+                  </div>
                 ) : (
                   <>
                     {wars.eachWAR.map((war) => (
