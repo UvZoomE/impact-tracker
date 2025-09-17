@@ -16,6 +16,7 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import WarComments from "./WarComments";
 
 function Dialog({ isOpen, onClose }) {
   // Set initial state to null for cleaner checks
@@ -23,6 +24,7 @@ function Dialog({ isOpen, onClose }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [warViewer, setWarViewer] = useState("");
+  console.log(warViewer);
 
   useEffect(() => {
     if (isOpen) {
@@ -188,12 +190,7 @@ function Dialog({ isOpen, onClose }) {
                     >
                       <StarRating rating={warViewer.averageRatings} />
                     </RuxTooltip>
-                    <p>
-                      Comments:{" "}
-                      <strong className="comment-number">
-                        {warViewer.numberOfComments || 0}
-                      </strong>
-                    </p>
+                      <WarComments warViewer={warViewer}/>
                   </div>
                 ) : (
                   <>
@@ -265,7 +262,7 @@ function Dialog({ isOpen, onClose }) {
                         <p>
                           Comments:{" "}
                           <strong className="comment-number">
-                            {war.numberOfComments || 0}
+                            {war.numberOfRatings || 0}
                           </strong>
                         </p>
                         <RuxButton

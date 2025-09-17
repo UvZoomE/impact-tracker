@@ -1,20 +1,30 @@
+// .eslintrc.cjs
+// eslint-disable-next-line no-undef
 module.exports = {
-  root: true,
-  env: { browser: true, es2020: true },
+  parserOptions: {
+    ecmaVersion: 2020, // Supports optional chaining (?.)
+    sourceType: "module", // For ES modules
+    ecmaFeatures: {
+      jsx: true, // Enable JSX for React
+    },
+  },
+  env: {
+    browser: true, // For browser globals like window
+    es2020: true, // Enables ES2020 features
+  },
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
   ],
-  ignorePatterns: ["dist", ".eslintrc.cjs"],
-  parserOptions: { ecmaVersion: "latest", sourceType: "module" },
-  settings: { react: { version: "18.2" } },
-  plugins: ["react-refresh"],
+  plugins: ["react", "react-hooks"],
   rules: {
-    "react-refresh/only-export-components": [
-      "warn",
-      { allowConstantExport: true },
-    ],
+    "react/prop-types": "off", // Disable prop-types for JavaScript project
+    "react/react-in-scope": "off",
+  },
+  settings: {
+    react: {
+      version: "detect", // Auto-detect React version
+    },
   },
 };
