@@ -1,5 +1,5 @@
 // Add Docker compose once you set up your backend and other microservices
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { RuxClock, RuxMonitoringIcon } from "@astrouxds/react";
 
 const Home = () => {

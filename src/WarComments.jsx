@@ -1,7 +1,6 @@
 // src/WarComments.jsx
-import React, { useState, useEffect } from 'react';
-import { RuxButton } from '@astrouxds/react'; // Adjust import
-import StarRating from './StarRating'; // Adjust import
+import React, { useState, useEffect } from "react";
+import { RuxButton } from "@astrouxds/react"; // Adjust import
 
 /**
  * @typedef {Object} Comment
@@ -37,7 +36,7 @@ const WarComments = ({ warViewer }) => {
 
   return warViewer.comments?.length > 0 ? (
     <div className="war-comments-section">
-      <h4>Comments</h4>
+      <p style={{"color": "white"}}>Comments:</p>
       <ul className="comments-list">
         {warViewer.comments
           .slice(
@@ -48,13 +47,12 @@ const WarComments = ({ warViewer }) => {
             <li key={comment._id || index} className="comment-item">
               <div className="comment-header">
                 <span className="comment-author">
-                  {comment.author || 'Anonymous'}
+                  {comment.user}
                 </span>
                 <span className="comment-date">
                   {new Date(comment.date).toLocaleDateString()}
                 </span>
               </div>
-              <StarRating rating={comment.rating} size="small" />
               <p className="comment-text">{comment.text}</p>
               <hr className="comment-divider" />
             </li>
@@ -69,7 +67,7 @@ const WarComments = ({ warViewer }) => {
           Previous
         </RuxButton>
         <span className="page-info">
-          Page {currentPage} of{' '}
+          Page {currentPage} of{" "}
           {Math.ceil((warViewer.comments?.length || 0) / commentsPerPage)}
         </span>
         <RuxButton

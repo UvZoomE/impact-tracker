@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../css/Register.css";
 import ReactPasswordChecklist from "react-password-checklist";
 import axios from "axios";
@@ -23,7 +23,7 @@ const Register = () => {
       alert("Password is not valid, try again.");
     }
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/register`,
         { email, password },
       );

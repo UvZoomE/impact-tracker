@@ -137,7 +137,7 @@ function Dashboard() {
       const token = localStorage.getItem("authToken");
 
       // Send the collected file URLs to the backend along with other form data
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/wars`,
         {
           classification,

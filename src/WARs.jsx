@@ -141,7 +141,7 @@ function WARs() {
         alert("You need to provide comments on your rating, try again.");
         return;
       }
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/edited-wars`,
         {
           originalWarID: currentWAR._id,
@@ -176,7 +176,7 @@ function WARs() {
     setIsImageDialogOpen(true); // Open the image dialog
   };
 
-  const handleCloseImageDialog = (e) => {
+  const handleCloseImageDialog = () => {
     setIsImageDialogOpen(false);
     setImageSrc("");
     setImageArray([]);
@@ -401,7 +401,7 @@ function WARs() {
                     <RuxButton
                       id="provide-unclassified"
                       icon="add"
-                      onClick={(e) => setAddUnclassifiedVersion(true)}
+                      onClick={() => setAddUnclassifiedVersion(true)}
                     >
                       Add
                     </RuxButton>
@@ -438,7 +438,7 @@ function WARs() {
                     <RuxButton
                       id="provide-bullet"
                       icon="add"
-                      onClick={(e) => setUnclassifiedBullet(true)}
+                      onClick={() => setUnclassifiedBullet(true)}
                     >
                       Add
                     </RuxButton>
@@ -479,7 +479,7 @@ function WARs() {
                 <button
                   type="submit"
                   className="custom-button"
-                  onClick={(e) => setCurrentWAR(selectedWar)}
+                  onClick={() => setCurrentWAR(selectedWar)}
                 >
                   Submit Rating
                 </button>
