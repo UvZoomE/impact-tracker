@@ -43,6 +43,7 @@ warRouter.post("/wars", verifyToken, async (req, res) => {
       poc,
       name,
       files: files.length > 0 ? files : null, // Include file URLs if available
+      comments: [],
     });
 
     // Save to MongoDB
@@ -90,8 +91,22 @@ warRouter.post("/edited-wars", verifyToken, async (req, res) => {
     files,
   } = req.body;
 
-  const numberOfRatings = (await WAR.find({_id: originalWarID}))[0].numberOfRatings;
-  const existingAverageRating = (await WAR.find({_id: originalWarID}))[0].averageRatings;
+  const newComment = {
+    text: comment, // e.g., "Great product!"
+    user: editsMadeBy, // e.g., "user123"
+    date: new Date(), // e.g., current timestamp
+    newDescription,
+    newImpact,
+    rating,
+    unclassifiedVersion,
+    eprBullet,
+    files,
+  };
+
+  const numberOfRatings = (await WAR.find({ _id: originalWarID }))[0]
+    .numberOfRatings;
+  const existingAverageRating = (await WAR.find({ _id: originalWarID }))[0]
+    .averageRatings;
 
   try {
     // Validate input (you can add more validation here)
@@ -110,6 +125,7 @@ warRouter.post("/edited-wars", verifyToken, async (req, res) => {
       {
         $inc: { numberOfRatings: 1 },
         $set: { averageRatings: newAverage },
+        $push: { comments: newComment },
       }
     );
 

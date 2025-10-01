@@ -1,7 +1,8 @@
 import { RuxIcon } from "@astrouxds/react";
+import React from "react";
 import "./css/StarRating.css";
 
-function StarRating({ rating, setRating }) {
+const StarRating = ({ rating, setRating }) => {
   const handleStarClick = (index) => {
     setRating(index + 1); // 1-based rating
   };

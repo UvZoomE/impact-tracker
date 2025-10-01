@@ -137,7 +137,7 @@ function Dashboard() {
       const token = localStorage.getItem("authToken");
 
       // Send the collected file URLs to the backend along with other form data
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/wars`,
         {
           classification,
@@ -158,6 +158,22 @@ function Dashboard() {
     } catch (err) {
       console.error("Error during submission", err);
       setFiles([]); // Clear the file input on error
+    }
+
+    // Update user's war count in the backend
+    try {
+      const token = localStorage.getItem("authToken");
+      await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/user/updateWarCount`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Sending token as a Bearer token
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Error updating WAR count", err);
     }
   };
 

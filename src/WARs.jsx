@@ -7,7 +7,7 @@ import {
   RuxIcon,
   RuxButton,
   RuxTextarea,
-  RuxDialog
+  RuxDialog,
 } from "@astrouxds/react";
 import "./css/WARs.css";
 import axios from "axios";
@@ -35,7 +35,7 @@ function WARs() {
   const [files, setFiles] = useState("");
   const [error, setError] = useState("");
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false); // Secondary dialog visibility
-  const [imageSrc, setImageSrc] = useState('');
+  const [imageSrc, setImageSrc] = useState("");
   const [imageArray, setImageArray] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
 
@@ -107,7 +107,7 @@ function WARs() {
 
     try {
       // Check if there are any files to upload
-      if (files && files[0].length > 0) {
+      if (files && files[0]?.length > 0) {
         // Wait for all the file uploads to Cloudinary to complete
         fileUrls = await Promise.all(
           files[0].map(async (file) => {
@@ -141,7 +141,7 @@ function WARs() {
         alert("You need to provide comments on your rating, try again.");
         return;
       }
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/edited-wars`,
         {
           originalWarID: currentWAR._id,
@@ -176,9 +176,9 @@ function WARs() {
     setIsImageDialogOpen(true); // Open the image dialog
   };
 
-  const handleCloseImageDialog = (e) => {
+  const handleCloseImageDialog = () => {
     setIsImageDialogOpen(false);
-    setImageSrc('');
+    setImageSrc("");
     setImageArray([]);
   };
 
@@ -401,7 +401,7 @@ function WARs() {
                     <RuxButton
                       id="provide-unclassified"
                       icon="add"
-                      onClick={(e) => setAddUnclassifiedVersion(true)}
+                      onClick={() => setAddUnclassifiedVersion(true)}
                     >
                       Add
                     </RuxButton>
@@ -438,7 +438,7 @@ function WARs() {
                     <RuxButton
                       id="provide-bullet"
                       icon="add"
-                      onClick={(e) => setUnclassifiedBullet(true)}
+                      onClick={() => setUnclassifiedBullet(true)}
                     >
                       Add
                     </RuxButton>
@@ -446,10 +446,13 @@ function WARs() {
                 </div>
                 {selectedWar.files && selectedWar.files.length > 0 ? (
                   <div>
-                      <div className="current-images">
-                        <p>File Provided:</p>
-                        <RuxIcon icon="image" onClick={(e) => handleIconClick(e, selectedWar.files)} />
-                      </div>
+                    <div className="current-images">
+                      <p>File Provided:</p>
+                      <RuxIcon
+                        icon="image"
+                        onClick={(e) => handleIconClick(e, selectedWar.files)}
+                      />
+                    </div>
                   </div>
                 ) : (
                   ""
@@ -476,7 +479,7 @@ function WARs() {
                 <button
                   type="submit"
                   className="custom-button"
-                  onClick={(e) => setCurrentWAR(selectedWar)}
+                  onClick={() => setCurrentWAR(selectedWar)}
                 >
                   Submit Rating
                 </button>
@@ -491,13 +494,16 @@ function WARs() {
               style={{ zIndex: 9999 }} // Ensure it's on top of the main dialog
             >
               {imageSrc && imageSrc.length === 1 ? (
-              <img
-                src={imageSrc[0].secure_url}
-                alt="Selected Icon"
-                style={{ maxWidth: "100%" }}
-              />) : imageArray.length > 0 ? (
-                <Carousel images={imageArray}/>
-              ) : ""}
+                <img
+                  src={imageSrc[0].secure_url}
+                  alt="Selected Icon"
+                  style={{ maxWidth: "100%" }}
+                />
+              ) : imageArray.length > 0 ? (
+                <Carousel images={imageArray} />
+              ) : (
+                ""
+              )}
             </RuxDialog>
           )}
         </div>

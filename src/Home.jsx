@@ -35,17 +35,17 @@ const Home = () => {
             <RuxTab
               id="tab-id-2-1"
               selected={activeTab === "dashboard"}
-              onClick={(e) => setActiveTab("dashboard")}
+              onClick={() => setActiveTab("dashboard")}
             >
               Home
             </RuxTab>
-            <RuxTab id="tab-id-2-2" onClick={(e) => setActiveTab("wars")}>
+            <RuxTab id="tab-id-2-2" onClick={() => setActiveTab("wars")}>
               Rate WARs
             </RuxTab>
-            <RuxTab id="tab-id-2-4" onClick={(e) => setActiveTab("sitrep")}>
+            <RuxTab id="tab-id-2-4" onClick={() => setActiveTab("sitrep")}>
               SITREP
             </RuxTab>
-            <RuxTab id="tab-id-2-3" onClick={(e) => setActiveTab("leaderboard")}>
+            <RuxTab id="tab-id-2-3" onClick={() => setActiveTab("leaderboard")}>
               Leaderboard
             </RuxTab>
           </RuxTabs>

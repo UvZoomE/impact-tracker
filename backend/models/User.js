@@ -55,6 +55,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   isVerified: { type: Boolean, default: false },
   verificationToken: { type: String },
+  warsSubmitted: { type: Number, default: 0 },
+  totalScore: { type: Number, default: 0 },
 });
 
 // Hash password before saving user
