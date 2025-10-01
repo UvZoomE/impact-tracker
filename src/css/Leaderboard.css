@@ -16,12 +16,28 @@
   color: #4dacff;
 }
 
+.levelFilter {
+  width: 20%;
+  display: flex;
+  justify-content: flex-end;
+  margin-left: auto;
+  margin-right: 5%;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #333333;
+  background-color: #1b2d3e;
+  color: #ffffff;
+  position: relative;
+}
+
 .leaderboard-table {
   width: 90%;
   border-collapse: separate;
   border-spacing: 0;
   margin-left: auto;
   margin-right: auto;
+  max-height: 500px;
+  overflow-y: auto;
 }
 
 .leaderboard-header, .leaderboard-row {
