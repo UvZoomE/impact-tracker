@@ -140,13 +140,13 @@ function Dialog({ isOpen, onClose }) {
                       )}
                     </div>
                     <p>
-                      Description: <span>{warViewer.description}</span>
+                      <strong>Description:</strong> <span>{warViewer.description}</span>
                     </p>
                     <p>
-                      Impact: <span>{warViewer.impact}</span>
+                      <strong>Impact:</strong> <span>{warViewer.impact}</span>
                     </p>
                     <p>
-                      POC: <span>{warViewer.poc}</span>
+                      <strong>POC:</strong> <span>{warViewer.poc}</span>
                     </p>
                     {warViewer.files && warViewer.files.length > 0 && (
                       <div className="war-files">
@@ -209,13 +209,13 @@ function Dialog({ isOpen, onClose }) {
                           <hr className="line-for-title" />
                         </div>
                         <p>
-                          Description: <span>{war.description}</span>
+                          <strong>Description:</strong> <span>{war.description}</span>
                         </p>
                         <p>
-                          Impact: <span>{war.impact}</span>
+                          <strong>Impact:</strong> <span>{war.impact}</span>
                         </p>
                         <p>
-                          POC: <span>{war.poc}</span>
+                          <strong>POC:</strong> <span>{war.poc}</span>
                         </p>
                         {war.files && war.files.length > 0 && (
                           <div className="war-files">
@@ -251,7 +251,7 @@ function Dialog({ isOpen, onClose }) {
                           </div>
                         )}
                         <hr className="line-above-ratings" />
-                        <p>Average Rating: </p>
+                        <p><strong>Average Rating:</strong> </p>
                         <RuxTooltip
                           message={`Based on ${war.numberOfRatings} ratings.`}
                           placement="bottom"
@@ -260,7 +260,7 @@ function Dialog({ isOpen, onClose }) {
                           <StarRating rating={war.averageRatings} />
                         </RuxTooltip>
                         <p>
-                          Comments:{" "}
+                          <strong>Comments:</strong>{" "}
                           <strong className="comment-number">
                             {war.numberOfRatings || 0}
                           </strong>

@@ -1,6 +1,8 @@
 // src/WarComments.jsx
 import React, { useState, useEffect } from "react";
 import { RuxButton } from "@astrouxds/react"; // Adjust import
+import "/src/css/WarComments.css";
+import userIcon from "./images/iconImage.jpg";
 
 /**
  * @typedef {Object} Comment
@@ -24,6 +26,27 @@ const WarComments = ({ warViewer }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const commentsPerPage = 5;
 
+  function displayedName(userName)  {
+    const selection = userName.split('@');
+    return selection[0];
+  }
+
+  function relativeDate(date) {
+    const now = new Date();
+    const commentDate = new Date(date);
+    const diffTime = Math.abs(now - commentDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "Yesterday";
+    return `${diffDays} days ago`;
+  }
+
+  function styleCommentText(text) {
+    return (
+      <span style={{"color": "gray"}}>({text})</span>
+    );
+  }
+
   useEffect(() => {
     const comments = warViewer.comments || [];
     const maxPage = Math.ceil(comments.length / commentsPerPage);
@@ -36,7 +59,7 @@ const WarComments = ({ warViewer }) => {
 
   return warViewer.comments?.length > 0 ? (
     <div className="war-comments-section">
-      <p style={{"color": "white"}}>Comments:</p>
+      <p style={{"color": "white"}}>Comments {styleCommentText(`${warViewer.comments?.length}`)}</p>
       <ul className="comments-list">
         {warViewer.comments
           .slice(
@@ -44,18 +67,22 @@ const WarComments = ({ warViewer }) => {
             currentPage * commentsPerPage
           )
           .map((comment, index) => (
-            <li key={comment._id || index} className="comment-item">
+            <div key={comment._id || index} className="comment-item">
               <div className="comment-header">
+                <img src={userIcon} alt='User Icon' className='comment-user-icon' />
                 <span className="comment-author">
-                  {comment.user}
+                  {displayedName(comment.user)}
                 </span>
                 <span className="comment-date">
-                  {new Date(comment.date).toLocaleDateString()}
+                  {relativeDate(comment.date)}
                 </span>
               </div>
               <p className="comment-text">{comment.text}</p>
               <hr className="comment-divider" />
-            </li>
+              <div className="comment-reply">
+                Reply
+              </div>
+            </div>
           ))}
       </ul>
       <div className="pagination">

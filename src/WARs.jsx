@@ -215,17 +215,17 @@ function WARs() {
               <div className="war-card-second-row">
                 <div className="card-content">
                   <p>
-                    Description:{" "}
+                    <strong>Description:</strong>{" "}
                     <span className="card-description">
                       {element.description}
                     </span>
                   </p>
                   <p>
-                    Impact:{" "}
+                    <strong>Impact:</strong>{" "}
                     <span className="card-impact">{element.impact}</span>
                   </p>
                   <p>
-                    POC: <span className="card-poc">{element.poc}</span>
+                    <strong>POC:</strong> <span className="card-poc">{element.poc}</span>
                   </p>
                   {element.files && element.files.length > 0 ? (
                     <div className="attachment">
@@ -296,7 +296,7 @@ function WARs() {
                   ) : (
                     <>
                       <p>
-                        Description:{" "}
+                        <strong>Description:</strong>{" "}
                         <span className="rate-war-description">
                           {newDescription || selectedWar.description}{" "}
                           {/* Display newDescription or fallback */}
@@ -347,7 +347,7 @@ function WARs() {
                   ) : (
                     <>
                       <p>
-                        Impact:{" "}
+                        <strong>Impact:{" "}</strong>
                         <span className="rate-war-description">
                           {newImpact || selectedWar.impact}{" "}
                           {/* Display newImpact or fallback */}
@@ -368,7 +368,7 @@ function WARs() {
 
                 <div className="poc-row">
                   <p>
-                    POC:{" "}
+                    <strong>POC:{" "}</strong>
                     <span className="rate-war-description">
                       {selectedWar.poc}
                     </span>
