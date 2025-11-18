@@ -7,8 +7,6 @@ import {
   RuxTab,
   RuxTabs,
 } from "@astrouxds/react";
-import "@astrouxds/astro-web-components/dist/components/rux-tab";
-import "@astrouxds/astro-web-components/dist/components/rux-tabs";
 import "./css/Home.css";
 import Dashboard from "./Dashboard";
 import WARs from "./WARs";
