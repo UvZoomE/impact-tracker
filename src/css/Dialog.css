@@ -2,69 +2,102 @@
 :root {
   --card-bg-color: #101923;
   --card-border-color: #4dacff;
-  --card-shadow-color: rgba(0, 0, 0, 0.1);
+  --card-shadow-color: rgba(0, 0, 0, 0.4);
+  --overlay-bg-color: rgba(0, 0, 0, 0.3); /* Reduced opacity */
   --text-color: white;
-  --link-color: #007bff;
-  --link-hover-color: #0056b3;
+  --text-muted: #b0bec5;
+  --accent-color: #4dacff;
+}
+
+/* Dialog Overlay - Centering Logic */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--overlay-bg-color);
+  backdrop-filter: blur(2px); /* Reduced blur for better visibility */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it sits on top */
+  animation: fadeIn 0.2s ease-out;
+}
+
+.dialog-content {
+  background-color: #1b2633; /* Slightly lighter than card for contrast */
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border-color);
+  width: 90%;
+  max-width: 600px; /* Constrain width on large screens */
+  max-height: 90vh; /* Don't overflow screen height */
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
 .buttons-in-header {
   display: flex;
-  flex-direction: row;
-}
-
-.search-button {
-  margin-right: auto;
-}
-
-.back-button {
-  margin-right: auto;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .dialog-header {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
+.dialog-header h2 {
+  color: var(--text-color);
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+/* Body and Scrolling */
 .dialog-body {
-  max-height: 400px;
   overflow-y: auto;
+  padding-right: 5px; /* Space for scrollbar */
 }
 
-/* Main container for the list of wars */
+/* List Container */
 .wars-list {
   display: flex;
-  flex-wrap: nowrap;
-  flex-direction: column; /* Allows items to wrap to the next line on smaller screens */
-  gap: 20px; /* Space between cards */
-  padding: 20px;
-  justify-content: center;
-  /* Add these two properties for scrolling */
-  overflow-y: auto; /* Enables vertical scrolling when content overflows */
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* Individual war item card styling */
+/* Detail Mode - Seamless Integration */
+.wars-list.detail-mode {
+  gap: 0;
+}
+
+/* In detail mode, remove card-like appearance to make it look like native page content */
+.wars-list.detail-mode .war-item {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Individual Card */
 .war-item {
   background-color: var(--card-bg-color);
   border: 1px solid var(--card-border-color);
-  border-radius: 8px; /* Rounded corners */
+  border-radius: 4px;
   padding: 20px;
-  box-shadow: 0 4px 8px var(--card-shadow-color); /* Subtle shadow effect */
-  transition: transform 0.2s ease-in-out; /* Smooth transition on hover */
+  box-shadow: 0 4px 6px var(--card-shadow-color);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.war-item:hover {
-  transform: translateY(-5px); /* Lifts the card slightly on hover */
-}
-
-/* Header section containing the title and classification */
 .war-item-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 10px;
-  margin-bottom: 15px;
+  justify-content: center;
+  margin-bottom: 5px;
 }
 
 .war-classification {
@@ -72,84 +105,108 @@
 }
 
 .war-item-title {
-  margin-right: auto;
-  margin-left: auto;
-  width: fit-content;
-  padding-bottom: 5px;
+  text-align: center;
 }
 
 .war-item-title h3 {
-  margin: 0;
-  padding: 0;
+  margin: 0 0 10px 0;
   color: var(--text-color);
 }
 
 .line-for-title {
-  /* Remove the default browser border */
   border: none;
-
-  /* Define the line's thickness */
   height: 1px;
-
-  /* Set the line color */
-  background-color: var(--card-border-color);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--card-border-color),
+    transparent
+  );
+  margin-bottom: 10px;
 }
 
-/* Paragraph styling for description, impact, etc. */
+/* Typography */
 .war-item p {
   color: var(--text-color);
-  line-height: 1.6;
-  margin: 10px 0;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.war-item strong {
+  color: var(--accent-color);
 }
 
 .war-item span {
-  /* border: 1px solid var(--card-border-color); */
-  border-radius: 4px;
-  padding: 5px;
+  color: var(--text-muted);
 }
 
-/* Container for attached files */
-.war-files {
-  padding-top: 15px;
-}
-
+/* Files Section */
 .war-files h4 {
-  margin-top: 0;
-  margin-bottom: 10px;
   color: var(--text-color);
-}
-
-/* Styling for individual files (images or links) */
-.file-item {
-  margin-bottom: 10px;
-}
-
-/* Image styling */
-.war-image {
-  max-width: 100%; /* Ensures image is responsive and fits container */
-  height: auto;
-  border-radius: 4px;
-  border: 1px solid var(--card-border-color);
-}
-
-.line-above-ratings {
-  border: 1px solid var(--card-border-color);
-}
-
-.comment-number {
-  color: #4dacff;
-  font-size: x-large;
+  margin: 0 0 10px 0;
+  border-bottom: 1px solid #2c3e50;
+  padding-bottom: 5px;
 }
 
 .file-swiper {
-  width: 250px; /* Adjust width as needed */
-  padding: 0 40px; /* Make room for arrows */
-  box-sizing: border-box;
+  width: 100%;
+  max-width: 300px; /* Prevent it from getting too wide */
+  padding-bottom: 30px; /* Space for pagination dots */
+  margin: 0 auto;
 }
 
 .file-item {
   display: flex;
   justify-content: center;
+  padding: 10px 0;
+}
+
+/* Ratings & Meta */
+.line-above-ratings {
+  border: 0;
+  border-top: 1px solid #2c3e50;
+  margin: 10px 0;
+}
+
+.war-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comment-number {
+  color: var(--accent-color);
+  font-size: 1.2rem;
+  margin-left: 5px;
+}
+
+.war-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* Utility / Status classes */
+.status-message {
+  text-align: center;
+  color: var(--text-color);
+  padding: 40px;
+  font-size: 1.1rem;
+}
+
+.status-message.error {
+  color: #ff6b6b;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 20px 0;
+  gap: 10px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
