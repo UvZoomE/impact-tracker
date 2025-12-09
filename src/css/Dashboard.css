@@ -1,35 +1,119 @@
 .cards-container {
   display: flex;
-  flex-direction: row; /* Default, but you can specify it explicitly */
+  flex-direction: row;
   gap: 40px;
   height: 100%;
   flex-wrap: wrap;
 }
 
+/* =========================================
+   ADVANCED WAR BUTTON (Refactored)
+   ========================================= */
+
 .war-button {
-  background-color: #4dacff;
-  color: #080c11;
-  font-size: 16px;
-  font-weight: bold;
+  /* Layout & Positioning */
+  position: relative;
+  width: 200px;
   padding: 15px 20px;
   border: none;
   border-radius: 8px;
+  display: flex; /* Changed to flex for better centering */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+
+  /* Typography */
+  color: #080c11;
+  font-size: 16px;
+  font-weight: 800; /* Extra bold for command feel */
   text-align: center;
-  position: relative;
-  display: inline-block;
-  width: 200px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  /* Coloring & Background - Linear Gradient for 3D feel */
+  background: linear-gradient(135deg, #4dacff 0%, #2196f3 100%);
+
+  /* Initial State Shadow */
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+
+  /* Smooth Transitions */
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden; /* Ensures the shine effect stays inside */
+  z-index: 1;
 }
 
+/* --- Hover State (Movement & Glow) --- */
+.war-button:hover {
+  /* Lift the button up */
+  transform: translateY(-4px);
+
+  /* Intensify Blue Shadow to create a "Glow" */
+  box-shadow:
+    0 12px 20px rgba(77, 172, 255, 0.4),
+    0 4px 6px rgba(77, 172, 255, 0.2);
+
+  /* Slight Brightness Boost */
+  filter: brightness(1.05);
+}
+
+/* --- Active State (Clicking) --- */
+.war-button:active {
+  /* Press the button down */
+  transform: translateY(1px) scale(0.98);
+
+  /* Reduce shadow to look flat against surface */
+  box-shadow: 0 2px 4px rgba(77, 172, 255, 0.2);
+}
+
+/* --- Inner Elements --- */
 .war-button span {
   display: block;
   margin-bottom: 5px;
 }
 
+/* --- Icon Animation --- */
 .war-button .plus-icon {
   font-size: 24px;
   margin-top: 5px;
+  display: block;
+  /* Smooth rotation transition */
+  transition: transform 0.4s ease;
 }
+
+/* Rotate icon when hovering the button */
+.war-button:hover .plus-icon {
+  transform: rotate(90deg);
+}
+
+/* --- Shine Effect Overlay --- */
+.war-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+  z-index: -1;
+}
+
+.war-button:hover::after {
+  left: 100%; /* Sweeps the shine across */
+  transition: 0.5s ease-in-out;
+}
+
+/* =========================================
+   EXISTING DIALOG & CARD STYLES
+   ========================================= */
 
 .dialog-overlay {
   position: fixed;
@@ -52,7 +136,7 @@
     0px 6px 12px rgba(0, 0, 0, 0.2);
   background-color: #1b2d3e;
   width: auto;
-  max-width: 90vw; /* Ensure it doesn't overflow the viewport */
+  max-width: 90vw;
   padding: 20px;
   box-sizing: border-box;
   max-height: 80vh;
@@ -185,7 +269,7 @@ select::placeholder {
   color: white;
 }
 
-/* --- DIALOG STYLES --- */
+/* --- DIALOG STYLES (Overlay & Content) --- */
 .dialog-overlay {
   position: fixed;
   top: 0;
@@ -200,7 +284,6 @@ select::placeholder {
 }
 
 .dialog-content {
-  /* 1. Updated background color */
   background: #101923;
   padding: 2rem;
   border-radius: 8px;
@@ -208,17 +291,14 @@ select::placeholder {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* 2. Title color set to white */
 .dialog-content h2 {
   color: white;
 }
 
-/* 3. Subtext color set to #4dacff */
 .dialog-content p {
   color: #4dacff;
 }
 
-/* Optional: Styled button to match the new theme */
 .dialog-content button {
   background-color: #4dacff;
   color: #101923;
@@ -230,6 +310,7 @@ select::placeholder {
   margin-top: 1rem;
 }
 
+/* --- Ratings & Icons --- */
 .goodRating {
   color: #56f000;
 }
@@ -239,7 +320,7 @@ select::placeholder {
 }
 
 .badRating {
-  color: #FF3838;
+  color: #ff3838;
 }
 
 .icons {
@@ -251,5 +332,5 @@ select::placeholder {
 }
 
 .down-icon {
-  color: #FF3838;
+  color: #ff3838;
 }

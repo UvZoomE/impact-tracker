@@ -1,53 +1,306 @@
-.sitrep-container {
-  display: flex;
-  flex-direction: row; /* Default, but you can specify it explicitly */
-  gap: 40px;
-  height: 100%;
-  flex-wrap: wrap;
+:root {
+  --primary-color: #4dacff;
+  --primary-hover: #3a9bdc;
+  --text-dark: #080c11;
+  --bg-overlay: rgba(0, 0, 0, 0.6);
+  --white: #ffffff;
+  --gray-light: #f4f6f8;
+  --gray-medium: #888;
+  --gray-dark: #333; /* Explicit dark color for text */
+  --border-color: #ced4da;
 }
 
-.modal {
+.sitrep-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 1rem;
+}
+
+/* =========================================
+   ADVANCED TRIGGER BUTTON
+   ========================================= */
+
+.sitrep-trigger-btn {
+  /* Base Structure */
+  position: relative;
+  width: 200px;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  /* Typography */
+  color: #080c11; /* Keep text dark for contrast against blue */
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  /* Coloring & Background - Linear Gradient for 3D feel */
+  background: linear-gradient(135deg, #4dacff 0%, #2196f3 100%);
+
+  /* Initial State Shadow */
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+
+  /* Smooth Transitions */
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden; /* Ensures the shine effect stays inside */
+  z-index: 1;
+}
+
+/* --- Hover State (Movement & Glow) --- */
+.sitrep-trigger-btn:hover {
+  /* Lift the button up */
+  transform: translateY(-4px);
+
+  /* Intensify Blue Shadow to create a "Glow" */
+  box-shadow:
+    0 12px 20px rgba(77, 172, 255, 0.4),
+    0 4px 6px rgba(77, 172, 255, 0.2);
+
+  /* Slight Brightness Boost */
+  filter: brightness(1.05);
+}
+
+/* --- Active State (Clicking) --- */
+.sitrep-trigger-btn:active {
+  /* Press the button down */
+  transform: translateY(1px) scale(0.98);
+
+  /* Reduce shadow to look flat against surface */
+  box-shadow: 0 2px 4px rgba(77, 172, 255, 0.2);
+}
+
+/* --- Icon Animation --- */
+.sitrep-trigger-btn .plus-icon {
+  font-size: 24px;
+  margin-top: 5px;
+  display: block;
+  /* Smooth rotation transition */
+  transition: transform 0.4s ease;
+}
+
+/* Rotate icon when hovering the button */
+.sitrep-trigger-btn:hover .plus-icon {
+  transform: rotate(90deg);
+}
+
+/* --- Shine Effect Overlay --- */
+.sitrep-trigger-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+  z-index: -1;
+}
+
+.sitrep-trigger-btn:hover::after {
+  left: 100%; /* Sweeps the shine across */
+  transition: 0.5s ease-in-out;
+}
+
+/* =========================================
+   MODAL & FORMS
+   ========================================= */
+
+.modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Slightly darker overlay for contrast */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(3px);
 }
 
 .modal-content {
+  /* CHANGED: Mapped to your container background */
+  background-color: #101923;
+  /* CHANGED: Mapped to your container border */
+  border: 1px solid #2b659b;
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* Darker shadow */
   display: flex;
   flex-direction: column;
-  background: white;
-  padding: 20px;
-  border-radius: 5px;
-  max-width: 400px;
-  width: 100%;
+  gap: 1.25rem;
+}
+
+.modal-content h2 {
+  margin: 0 0 0.5rem 0;
+  /* CHANGED: White text for dark mode */
+  color: white;
   text-align: center;
+  font-size: 1.5rem;
 }
 
-.sitrep-button {
-  background-color: #4dacff;
-  color: #080c11;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 15px 20px;
-  border: none;
-  border-radius: 8px;
+/* --- Form Layout --- */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: left;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  /* CHANGED: Light blue-gray for labels */
+  color: #aebfd1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Options Grid */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+/* Inputs */
+.text-input,
+.select-input,
+.date-picker-input,
+.textarea-input {
+  width: 100%;
+  padding: 10px 12px;
+  /* CHANGED: Border matches your theme border */
+  border: 1px solid #2b659b;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  /* CHANGED: Background uses your "selected" tab color */
+  background-color: #1c3f5e;
+  /* CHANGED: Text is white */
+  color: white;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.textarea-input {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.text-input:focus,
+.select-input:focus,
+.date-picker-input:focus,
+.textarea-input:focus {
+  outline: none;
+  /* CHANGED: Focus border is a brighter version of your blue */
+  border-color: #4da6ff;
+  box-shadow: 0 0 0 3px rgba(43, 101, 155, 0.3);
+}
+
+.text-input::placeholder,
+.textarea-input::placeholder,
+.date-picker-input::placeholder {
+  /* CHANGED: Muted blue-white for placeholders */
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* DatePicker specific fix */
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  color: white;
+}
+
+/* --- Action Buttons --- */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem; /* Little more breathing room */
+  padding-top: 1rem;
+  border-top: 1px solid #2b659b;
+}
+
+button {
   cursor: pointer;
-  width: 200px;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.sitrep-button span {
-  display: block;
-  margin-bottom: 5px;
+/* SECONDARY BUTTON (Cancel/Back)
+   Uses your "Selected Tab" color (#1c3f5e) as the base.
+   This makes it distinct from the background, but less aggressive than Primary.
+*/
+.btn-secondary {
+  background-color: rgba(28, 63, 94, 0.5); /* #1c3f5e at 50% opacity */
+  border: 1px solid #2b659b;
+  color: #aebfd1; /* Muted blue-gray text */
 }
 
-.sitrep-button .plus-icon {
-  font-size: 24px;
-  margin-top: 5px;
+.btn-secondary:hover:not(:disabled) {
+  background-color: #1c3f5e; /* Full opacity on hover */
+  color: white;
+  border-color: #4da6ff; /* Bright border highlight */
+}
+
+/* PRIMARY BUTTON (Save/Submit)
+   Uses your "Border" color (#2b659b) as the base,
+   but adds a shadow/glow to make it pop against the dark modal.
+*/
+.btn-primary {
+  background-color: #2b659b;
+  border: 1px solid #2b659b;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Lift effect */
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #3a7ab5; /* Slightly lighter blue */
+  border-color: #3a7ab5;
+  /* Adds a subtle blue glow fitting for dark mode */
+  box-shadow: 0 0 15px rgba(43, 101, 155, 0.6);
+  transform: translateY(-1px); /* Slight lift */
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(100%);
 }
